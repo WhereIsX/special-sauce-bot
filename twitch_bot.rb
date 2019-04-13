@@ -44,7 +44,7 @@ class Twitch
 
         ready[0].each do |s|
           line    = s.gets
-          match   = line.match(/^:(.+)!(.+) PRIVMSG #(.+) :(.+)$/)
+          match   = line.match(/^:(.+)!(.+) PRIVMSG #(\w+) :(.+)$/)
           message = match && match[4]
 
           if message =~ /^!hello/

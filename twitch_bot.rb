@@ -5,6 +5,7 @@
 #
 
 # You can fill in creds here or use environment variables if you choose.
+require 'pry'
 TWITCH_CHAT_TOKEN = ENV['TWITCH_CHAT_TOKEN']
 TWITCH_USER       = ENV['TWITCH_USER']
 
@@ -35,7 +36,7 @@ class Twitch
 
     socket.puts("PASS #{TWITCH_CHAT_TOKEN}")
     socket.puts("NICK #{TWITCH_USER}")
-
+    socket.puts("JOIN ##{TWITCH_USER}")
     logger.info 'Connected...'
 
     Thread.start do
@@ -45,12 +46,38 @@ class Twitch
         ready[0].each do |s|
           line    = s.gets
           match   = line.match(/^:(.+)!(.+) PRIVMSG #(\w+) :(.+)$/)
+
           message = match && match[4]
 
-          if message =~ /^!hello/
+          # NLP ?
+          # database => points system for stuff
+          # code in the chat :D `.eval`
+          # transpiler (code from gist/pastebin/etc => ruby)
+            # how to recognize language? << HARD
+            # we're making the google translate of code << use external library
+          # assistant -- request time to pair / do things with yana
+          #   => time is available, not available, etc.
+          # assistant -- prioritize urgency
+          #   =>
+
+          if message =~ /^!hey/
             user = match[1]
-            logger.info "USER COMMAND: #{user} - !hello"
-            send "PRIVMSG #open_mailbox :Hello, #{user} from Mailbot!"
+            logger.info "USER COMMAND: #{user} - !hey"
+            send "PRIVMSG ##{TWITCH_USER} :Hay is for horses, #{user}!"
+
+            "I like chicken"
+            subject.verb(object, parameter1, ...)
+            chicken = Chicken.new
+            where_is_x.like(chicken)
+
+            # !editor
+            #
+
+            # !uptime
+            # => (streaming time) / (total time since first stream)
+            #
+
+
           end
 
           logger.info "> #{line}"
@@ -64,7 +91,11 @@ class Twitch
   end
 end
 
-if TWITCH_CHAT_TOKEN.empty || TWITCH_USER.empty?
+# binding.pry
+
+# credentials check
+if TWITCH_CHAT_TOKEN.nil? ||
+  TWITCH_USER.nil?
   puts "You need to fill in your own Twitch credentials!"
   exit(1)
 end

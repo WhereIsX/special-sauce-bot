@@ -5,12 +5,19 @@
 #
 
 # You can fill in creds here or use environment variables if you choose.
-require 'pry'
-TWITCH_CHAT_TOKEN = ENV['TWITCH_CHAT_TOKEN']
-TWITCH_USER       = ENV['TWITCH_USER']
+
+
+## TODO:
+# => more words to search for using regex
+# => capitalization of user names, maybe we can use twitch api instead of twitch irc
+# => NLP? **
 
 require 'socket'
 require 'logger'
+
+TWITCH_CHAT_TOKEN = ENV['TWITCH_CHAT_TOKEN']
+TWITCH_USER       = ENV['TWITCH_USER']
+
 
 Thread.abort_on_exception = true
 
@@ -73,25 +80,37 @@ class Twitch
   # respond to a message when its pertinent (matches regexp)
   # sometimes calls send
   def respond(user, message)
-    case message
-    when /^!hey/
+
+    p "message is: #{message}"
+    p message.class
+    puts message.chomp == "!hey"
+
+    case message.chomp
+    when "!hey"
       logger.info "USER COMMAND: #{user} - !hey"
       send_privmsg "Hay is for horses, #{user}!"
+
+    when /disconnected from discord/
 
     when /discord/
       send_privmsg "join the best discord https://discord.gg/kV2MsYz"
 
-    when /project/
-      send_privmsg @project
-
     when /pair/
       send_privmsg ""
 
-    when /disconnected from discord/
+    when /project/
+      send_privmsg @project
+
+    when /recurse| RC /
+      send_privmsg <<~DOC
+      the recruse center is a self-directed educational retreat for programmers: recurse.com
+      DOC
+
 
     when /more schtuff/
       #incorporate some NLP!
       # look up in a databse
+
 
     end
   end

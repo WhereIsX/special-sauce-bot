@@ -14,6 +14,8 @@ require 'logger'
 
 Thread.abort_on_exception = true
 class ChatBot
+
+
 end
 
 class Twitch
@@ -42,33 +44,32 @@ class Twitch
     logger.info 'Connected...'
 
     Thread.start do
-      while running
-        while line = socket.gets
+      while running && line = socket.gets
 
-          next if line.nil?
-          match   = line.match(/^:(.+)!(.+) PRIVMSG #(\w+) :(.+)$/)
+        match   = line.match(/^:(.+)!.+ PRIVMSG #\w+ :(.+)$/)
+        next if match.nil?
+
+        user = match[1]
+        message = match[2]
+
+        case message
+        when /^!hey/
+          logger.info "USER COMMAND: #{user} - !hey"
+          send "PRIVMSG ##{TWITCH_USER} :Hay is for horses, #{user}!"
+
+        when /discord/
+          send "PRIVMSG ##{TWITCH_USER} :join the best discord https://discord.gg/kV2MsYz"
 
 
-          message = match && match[4]
-          case message
-          when /^!hey/
-            user = match[1]
-            logger.info "USER COMMAND: #{user} - !hey"
-            send "PRIVMSG ##{TWITCH_USER} :Hay is for horses, #{user}!"
+        when /project/
+          send "PRIVMSG ##{TWITCH_USER} :#{project}"
 
-          when /discord/
-            send "PRIVMSG ##{TWITCH_USER} :join the best discord https://discord.gg/kV2MsYz"
+        when /pair/
 
-
-          when /project|/
-            send "PRIVMSG ##{TWITCH_USER} :#{project}"
-
-          when /pair/
-
-          end
-
-          logger.info "> #{line}"
         end
+
+        logger.info "> #{line}"
+
       end
     end
   end

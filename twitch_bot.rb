@@ -13,6 +13,8 @@ require 'socket'
 require 'logger'
 
 Thread.abort_on_exception = true
+class ChatBot
+end
 
 class Twitch
   attr_reader :logger, :running, :socket
@@ -28,7 +30,7 @@ class Twitch
     socket.puts(message)
   end
 
-  def run
+  def run(project="")
     logger.info 'Preparing to connect...'
 
     @socket = TCPSocket.new('irc.chat.twitch.tv', 6667)
@@ -40,50 +42,28 @@ class Twitch
     logger.info 'Connected...'
 
     Thread.start do
-      while (running) do
-        ready = IO.select([socket])
+      while running
+        while line = socket.gets
 
-        ready[0].each do |s|
-          line    = s.gets
+          next if line.nil?
           match   = line.match(/^:(.+)!(.+) PRIVMSG #(\w+) :(.+)$/)
 
+
           message = match && match[4]
-
-          # NLP ?
-          # database => points system for stuff
-          # code in the chat :D `.eval`
-          # transpiler (code from gist/pastebin/etc => ruby)
-            # how to recognize language? << HARD
-            # we're making the google translate of code << use external library
-          # assistant -- request time to pair / do things with yana
-          #   => time is available, not available, etc.
-          # assistant -- prioritize urgency
-          #   =>
-
-          case
+          case message
           when /^!hey/
             user = match[1]
             logger.info "USER COMMAND: #{user} - !hey"
             send "PRIVMSG ##{TWITCH_USER} :Hay is for horses, #{user}!"
 
           when /discord/
-            send "PRIVMSG ##{TWITCH_USER} :someone said discord?"
-          end
+            send "PRIVMSG ##{TWITCH_USER} :join the best discord https://discord.gg/kV2MsYz"
 
 
+          when /project|/
+            send "PRIVMSG ##{TWITCH_USER} :#{project}"
 
-            # "I like chicken"
-            # subject.verb(object, parameter1, ...)
-            # chicken = Chicken.new
-            # where_is_x.like(chicken)
-
-            # !editor
-            #
-
-            # !uptime
-            # => (streaming time) / (total time since first stream)
-            #
-
+          when /pair/
 
           end
 
@@ -92,6 +72,7 @@ class Twitch
       end
     end
   end
+
 
   def stop
     @running = false
@@ -108,7 +89,9 @@ if TWITCH_CHAT_TOKEN.nil? ||
 end
 
 bot = Twitch.new
-bot.run
+puts 'which project are we working on today? (chatbots response to project)'
+project = gets.chomp
+bot.run(project)
 
 while (bot.running) do
   command = gets.chomp
@@ -116,7 +99,7 @@ while (bot.running) do
   if command == 'quit'
     bot.stop
   else
-    bot.send(command)
+    bot.send("PRIVMSG ##{TWITCH_USER} :#{command}")
   end
 end
 

@@ -13,18 +13,21 @@ require 'socket'
 require 'logger'
 
 Thread.abort_on_exception = true
-class ChatBot
 
 
-end
 
 class Twitch
   attr_reader :logger, :running, :socket
 
-  def initialize(logger = nil)
-    @logger  = logger || Logger.new(STDOUT)
+  def initialize(project: "")
+    @logger  = Logger.new(STDOUT)
     @running = false
     @socket  = nil
+    @project = project
+  end
+
+  def send_privmsg(message)
+    send("PRIVMSG ##{TWITCH_USER} :#{message}")
   end
 
   def send(message)
@@ -32,7 +35,7 @@ class Twitch
     socket.puts(message)
   end
 
-  def run(project="")
+  def run
     logger.info 'Preparing to connect...'
 
     @socket = TCPSocket.new('irc.chat.twitch.tv', 6667)
@@ -52,24 +55,9 @@ class Twitch
         user = match[1]
         message = match[2]
 
-        case message
-        when /^!hey/
-          logger.info "USER COMMAND: #{user} - !hey"
-          send "PRIVMSG ##{TWITCH_USER} :Hay is for horses, #{user}!"
-
-        when /discord/
-          send "PRIVMSG ##{TWITCH_USER} :join the best discord https://discord.gg/kV2MsYz"
-
-
-        when /project/
-          send "PRIVMSG ##{TWITCH_USER} :#{project}"
-
-        when /pair/
-
-        end
+        respond(user, message)
 
         logger.info "> #{line}"
-
       end
     end
   end
@@ -78,6 +66,36 @@ class Twitch
   def stop
     @running = false
   end
+
+
+  private
+
+  # respond to a message when its pertinent (matches regexp)
+  # sometimes calls send
+  def respond(user, message)
+    case message
+    when /^!hey/
+      logger.info "USER COMMAND: #{user} - !hey"
+      send_privmsg "Hay is for horses, #{user}!"
+
+    when /discord/
+      send_privmsg "join the best discord https://discord.gg/kV2MsYz"
+
+    when /project/
+      send_privmsg @project
+
+    when /pair/
+      send_privmsg ""
+
+    when /disconnected from discord/
+
+    when /more schtuff/
+      #incorporate some NLP!
+      # look up in a databse
+
+    end
+  end
+
 end
 
 # binding.pry
@@ -89,10 +107,11 @@ if TWITCH_CHAT_TOKEN.nil? ||
   exit(1)
 end
 
-bot = Twitch.new
 puts 'which project are we working on today? (chatbots response to project)'
 project = gets.chomp
-bot.run(project)
+
+bot = Twitch.new(project: project)
+bot.run
 
 while (bot.running) do
   command = gets.chomp
@@ -100,7 +119,7 @@ while (bot.running) do
   if command == 'quit'
     bot.stop
   else
-    bot.send("PRIVMSG ##{TWITCH_USER} :#{command}")
+    bot.send_privmsg(command)
   end
 end
 

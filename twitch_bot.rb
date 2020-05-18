@@ -60,15 +60,22 @@ class Twitch
           # assistant -- prioritize urgency
           #   =>
 
-          if message =~ /^!hey/
+          case
+          when /^!hey/
             user = match[1]
             logger.info "USER COMMAND: #{user} - !hey"
             send "PRIVMSG ##{TWITCH_USER} :Hay is for horses, #{user}!"
 
-            "I like chicken"
-            subject.verb(object, parameter1, ...)
-            chicken = Chicken.new
-            where_is_x.like(chicken)
+          when /discord/
+            send "PRIVMSG ##{TWITCH_USER} :someone said discord?"
+          end
+
+
+
+            # "I like chicken"
+            # subject.verb(object, parameter1, ...)
+            # chicken = Chicken.new
+            # where_is_x.like(chicken)
 
             # !editor
             #

@@ -14,6 +14,7 @@
 
 require 'socket'
 require 'logger'
+require_relative 'gif'
 
 TWITCH_CHAT_TOKEN = ENV['TWITCH_CHAT_TOKEN']
 TWITCH_USER       = ENV['TWITCH_USER']
@@ -24,13 +25,14 @@ Thread.abort_on_exception = true
 
 
 class Twitch
-  attr_reader :logger, :running, :socket
+  attr_reader :logger, :running, :socket, :gif_buffer
 
   def initialize(project: "")
     @logger  = Logger.new(STDOUT)
     @running = false
     @socket  = nil
     @project = project
+    @gif_buffer = []
   end
 
   def send_privmsg(message)
@@ -85,27 +87,49 @@ class Twitch
     p message.class
     puts message.chomp == "!hey"
 
-    case message.chomp
+    case message.chomp.downcase
+      # NOT fall through: executes on first match && does not continue
     when "!hey"
       logger.info "USER COMMAND: #{user} - !hey"
       send_privmsg "Hay is for horses, #{user}!"
 
-    when /disconnected from discord/
-
-    when /discord/
-      send_privmsg "join the best discord https://discord.gg/kV2MsYz"
-
-    when /pair/
-      send_privmsg ""
-
-    when /project/
+    when "!project"
       send_privmsg @project
 
-    when /recurse| RC /
+
+    # when /^!addgif/
+    #   # prevent this command from being spammed
+    #   next if @gif_buffer.size > 3
+    #
+    #   link = message.split(" ")[1]
+    #   @gif_buffer << link
+    #   puts "accept the link? \n0 to deny\n1 to accept\n"
+    #   decision = gets.chomp.to_i
+    #   case decision
+    #   when 0
+
+
+      # someone can add dick pics
+      # make a temporary list of gifs to be approved
+      # once approved -> add to gifs array
+
+    when /gif/
+      send_privmsg "https://www.youtube.com/watch?v=A-Rm1DsV7GM"
+
+    when /discord/
+      send_privmsg "join the best discord https://discord.gg/kjxcb9J"
+
+    when /recurse/
       send_privmsg <<~DOC
       the recruse center is a self-directed educational retreat for programmers: recurse.com
       DOC
 
+    when /duck/
+      send_privmsg GIF_DUCKIES.sample
+
+    when /disconnected from discord/
+    when /pair/
+      send_privmsg ""
 
     when /more schtuff/
       #incorporate some NLP!
@@ -117,8 +141,6 @@ class Twitch
 
 end
 
-# binding.pry
-
 # credentials check
 if TWITCH_CHAT_TOKEN.nil? ||
   TWITCH_USER.nil?
@@ -126,8 +148,9 @@ if TWITCH_CHAT_TOKEN.nil? ||
   exit(1)
 end
 
-puts 'which project are we working on today? (chatbots response to project)'
-project = gets.chomp
+project_file = File.open("project.txt")
+project = project_file.read
+project_file.close
 
 bot = Twitch.new(project: project)
 bot.run
@@ -142,4 +165,4 @@ while (bot.running) do
   end
 end
 
-puts 'Exited.'
+puts 'Exited'

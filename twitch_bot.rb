@@ -8,13 +8,17 @@
 
 
 ## TODO:
+# => gif name not already in all_gifs
 # => more words to search for using regex
 # => capitalization of user names, maybe we can use twitch api instead of twitch irc
 # => NLP? **
 
 require 'socket'
 require 'logger'
+require 'pry'
 require_relative 'gif'
+require_relative 'mods'
+
 
 TWITCH_CHAT_TOKEN = ENV['TWITCH_CHAT_TOKEN']
 TWITCH_USER       = ENV['TWITCH_USER']
@@ -32,7 +36,8 @@ class Twitch
     @running = false
     @socket  = nil
     @project = project
-    @gif_buffer = []
+    @gif_buffer = {}
+    @all_gifs = ALL_GIFS
   end
 
   def send_privmsg(message)
@@ -71,7 +76,6 @@ class Twitch
     end
   end
 
-
   def stop
     @running = false
   end
@@ -83,8 +87,6 @@ class Twitch
   # sometimes calls send
   def respond(user, message)
 
-    p "message is: #{message}"
-    p message.class
     puts message.chomp == "!hey"
 
     case message.chomp.downcase
@@ -97,23 +99,61 @@ class Twitch
       send_privmsg @project
 
 
-    # when /^!addgif/
-    #   # prevent this command from being spammed
-    #   next if @gif_buffer.size > 3
-    #
-    #   link = message.split(" ")[1]
-    #   @gif_buffer << link
-    #   puts "accept the link? \n0 to deny\n1 to accept\n"
-    #   decision = gets.chomp.to_i
-    #   case decision
-    #   when 0
+    when /^!addgif/ # !addgif [name] [link]
+      # prevent this command from being spammed
+      if @gif_buffer.size <= 3
+
+        gif = message.split(" ")
+        name = gif[1]
+        link = gif[2]
+        # ToNewExperiences suggest defer to mods
+
+        # validations for proper name && isnt already being used in buffer + all_gifs
+        if  !@gif_buffer.key?(name) &&
+            !@all_gifs.key?(name)   &&
+            name.length <= 10
+
+          @gif_buffer[name] = link
+          send_privmsg "got #{name} - #{link}"
+        end
+      end
 
 
-      # someone can add dick pics
-      # make a temporary list of gifs to be approved
-      # once approved -> add to gifs array
 
-    when /gif/
+
+    when /^!yesgif/ # !yesgif [name]
+      # assume that [name] does not collide with current @all_gifs
+      name = message.split(" ")[1]
+      link = @gif_buffer[name]
+      puts <<~DEBUG
+        #{@gif_buffer}
+        #{name}
+        name in gif buffer #{@gif_buffer.key?name} -- expecting true
+        user: #{user}
+        mods include user #{MODS.include? user}
+      DEBUG
+      if MODS.include?(user) && @gif_buffer.key?(name)
+
+        puts "\n gif was was approved"
+        @all_gifs[name] = @gif_buffer[name]
+        send_privmsg "#{name} - #{link} was approved ^-^"
+        # File.open('gif')
+        # File.
+      end
+
+    when /^!nogif/ #
+
+    when /^!giflist/ # display array
+      send_privmsg "#{@gif_buffer}"
+
+    when "!amimod"
+      send_privmsg "#{MODS.include? user}"
+
+
+    when /sounds/
+      send_privmsg "wanna make sounds hoppen? watch an ad for 10 bits"
+
+    when "!giforgif"
       send_privmsg "https://www.youtube.com/watch?v=A-Rm1DsV7GM"
 
     when /discord/
@@ -133,7 +173,7 @@ class Twitch
 
     when /more schtuff/
       #incorporate some NLP!
-      # look up in a databse
+      # points system for awesome viewrs who use points for yana goodness, i.e., hydrate, posture check, etc.
 
 
     end

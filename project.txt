@@ -1,1 +1,1 @@
-we're making a twitch bot today.  JOIN US!
+we're making a program in assembly that changes the color of the screen depending on keyboard input.  check out nand2tetris (https://www.nand2tetris.org)

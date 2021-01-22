@@ -17,6 +17,7 @@ require 'socket'
 require 'logger'
 require 'pry'
 require 'active_record'
+# require 'sqlite3'
 require_relative 'twitch'
 
 TWITCH_CHAT_TOKEN = ENV['TWITCH_CHAT_TOKEN']
@@ -24,10 +25,10 @@ TWITCH_USER       = ENV['TWITCH_USER']
 
 Thread.abort_on_exception = true
 
-ActiveRecord::Base.establish_connection(
-  adapter: 'sqlite3',
-  database: 'test.db'
-)
+# ActiveRecord::Base.establish_connection(
+#   adapter: 'sqlite3',
+#   database: 'test.db'
+# )
 
 
 # credentials check

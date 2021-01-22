@@ -1,5 +1,5 @@
 class Twitch
-  attr_reader :logger, :running, :socket, :gif_buffer
+  attr_reader :logger, :running, :socket
 
   def initialize(project: "")
     @logger  = Logger.new(STDOUT)
@@ -7,7 +7,7 @@ class Twitch
     @socket  = nil
   end
 
-  def send_privmsg(message)
+  def send_privmsg(message) #stuff
     send("PRIVMSG ##{TWITCH_USER} :#{message}")
   end
 

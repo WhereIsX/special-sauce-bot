@@ -1,3 +1,5 @@
+# originally from https://gist.github.com/nevern02/98bdc9701e2741f4cb3b0b47f3d2c429
+ 
 # A quick example of a Twitch chat bot in Ruby.
 # No third party libraries. Just Ruby standard lib.
 #
@@ -16,20 +18,12 @@
 require 'socket'
 require 'logger'
 require 'pry'
-require 'active_record'
-# require 'sqlite3'
 require_relative 'twitch'
 
 TWITCH_CHAT_TOKEN = ENV['TWITCH_CHAT_TOKEN']
 TWITCH_USER       = ENV['TWITCH_USER']
 
 Thread.abort_on_exception = true
-
-# ActiveRecord::Base.establish_connection(
-#   adapter: 'sqlite3',
-#   database: 'test.db'
-# )
-
 
 # credentials check
 if TWITCH_CHAT_TOKEN.nil? ||
@@ -38,8 +32,7 @@ if TWITCH_CHAT_TOKEN.nil? ||
   exit(1)
 end
 
-project = File.read("project.txt")
-bot = Twitch.new(project: project)
+bot = Twitch.new()
 bot.run
 
 while (bot.running) do

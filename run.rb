@@ -1,19 +1,5 @@
-# originally from https://gist.github.com/nevern02/98bdc9701e2741f4cb3b0b47f3d2c429
- 
-# A quick example of a Twitch chat bot in Ruby.
-# No third party libraries. Just Ruby standard lib.
-#
-# See the tutorial video: https://www.youtube.com/watch?v=_FbRcZNdNjQ
-#
+# derived from https://gist.github.com/nevern02/98bdc9701e2741f4cb3b0b47f3d2c429
 
-# You can fill in creds here or use environment variables if you choose.
-
-
-## TODO:
-# => gif name not already in all_gifs
-# => more words to search for using regex
-# => capitalization of user names, maybe we can use twitch api instead of twitch irc
-# => NLP? **
 
 require 'socket'
 require 'logger'

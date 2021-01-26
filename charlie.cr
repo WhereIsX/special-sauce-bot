@@ -8,13 +8,33 @@ class Charlie
     @client.puts("NICK #{bot_name}")
     @client.puts("JOIN ##{channel_name}")
     puts "Connecting... "
+    say("The awesomeness has arrived, make way!")
+    @client.flush
+    sleep 10
+    say("oh")
   end
 
   def say(message : String)
-    @client.puts("PRIVMSG ##{@channel_name} :#{message}")
+    p message
+    @client.puts("PRIVMSG ##{@channel_name} :#{message} \r\n")
+  end
+
+  # A: hello
+  # B: yo
+
+  def listen
+    # spawn do
+    say("starting to listen")
+    3.times do
+      words = @client.gets
+      say("we heard that:  #{words}")
+      sleep(15)
+    end
+    # end
   end
 
   def goodbye
+    @client.flush
     @client.close
   end
 end

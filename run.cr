@@ -21,6 +21,10 @@ charlie = Charlie.new(
   bot_name: BOT_NAME,
   channel_name: CHANNEL_NAME
 )
+
+# charlie.say("talking from the run.cr file")
+
+charlie.goodbye
 # loop for charlies behaviors
 # charlie.say("testing")
 # and if we type "bye" into terminal => charlie.goodbye

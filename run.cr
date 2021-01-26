@@ -13,6 +13,10 @@ require "openssl"
 # read through original IRC RFC doc: https://tools.ietf.org/html/rfc1459
 # what happens when a socket isn't closed!?
 
+# thoughts for sig days
+# ctrl + z catchable ?
+# sigterm, sigint, sighup (sig hung up), sig kill, ...
+
 # thoughts for bot features
 # when duckies use our emotes, we give them points?
 
@@ -23,8 +27,13 @@ charlie = Charlie.new(
 )
 
 # charlie.say("talking from the run.cr file")
+charlie.listen
 
-charlie.goodbye
-# loop for charlies behaviors
-# charlie.say("testing")
-# and if we type "bye" into terminal => charlie.goodbye
+while charlie.listening && (yana_says = gets)
+  yana_says = yana_says.chomp
+  if yana_says == "quit"
+    charlie.goodbye
+  else
+    charlie.say(yana_says)
+  end
+end

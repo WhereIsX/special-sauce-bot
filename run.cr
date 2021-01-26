@@ -1,22 +1,26 @@
+require "./charlie.cr"
 require "./secrets.cr"
 require "socket"
-require "openssl" # <<??? how was anyone supposed to know to import this??
+require "openssl"
+# ^ make issue/PR to Crystal about
+# 1: examples
+# 2?: how children can point to parents for examples
+
 # questions for sock day
 # how can I make sure these socks are encrypted with ssl?
 # why do they still call this ssl when its clearly *deprecated*
 # wtf is client.puts really doing?
 # read through original IRC RFC doc: https://tools.ietf.org/html/rfc1459
+# what happens when a socket isn't closed!?
 
-TWITCH_TOKEN
+# thoughts for bot features
+# when duckies use our emotes, we give them points?
 
-tcp_sock = TCPSocket.new("irc.chat.twitch.tv", 6697)
-client = OpenSSL::SSL::Socket::Client.new(tcp_sock)
-
-client.puts("PASS #{TWITCH_TOKEN}") #
-client.puts("NICK #{BOT_NAME}")
-client.puts("JOIN ##{CHANNEL_NAME}")
-puts "Connecting... "
-
-client.puts("PRIVMSG ##{CHANNEL_NAME} :testing")
-client.close
-6
+charlie = Charlie.new(
+  token: TWITCH_TOKEN,
+  bot_name: BOT_NAME,
+  channel_name: CHANNEL_NAME
+)
+# loop for charlies behaviors
+# charlie.say("testing")
+# and if we type "bye" into terminal => charlie.goodbye

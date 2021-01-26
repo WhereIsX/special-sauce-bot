@@ -1,7 +1,7 @@
 class Twitch
   attr_reader :logger, :running, :socket
 
-  def initialize(project: "")
+  def initialize()
     @logger  = Logger.new(STDOUT)
     @running = false
     @socket  = nil

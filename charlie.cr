@@ -9,8 +9,8 @@ class Charlie
     @client.puts("PASS #{token}")
     @client.puts("NICK #{bot_name}")
     @client.puts("JOIN ##{channel_name}")
-    puts "Connecting... "
-    say("The awesomeness has arrived, make way!")
+    puts "I'm alive!"
+    say("🌊 hi")
   end
 
   def say(message : String)
@@ -39,7 +39,14 @@ class Charlie
   end
 
   def goodbye
+    say("🌊 bye")
+    # part the channel
+    # quit the server
+    @client.puts("QUIT")
     @listening = false
+    # puts @client.gets
+
     @client.close
+    puts "\n🌊\n"
   end
 end

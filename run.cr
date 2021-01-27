@@ -28,6 +28,7 @@ charlie = Charlie.new(
 
 # charlie.say("talking from the run.cr file")
 charlie.listen
+Signal::INT.trap { charlie.goodbye; exit }
 
 while charlie.listening && (yana_says = gets)
   yana_says = yana_says.chomp

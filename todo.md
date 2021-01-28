@@ -1,4 +1,5 @@
 0. hashmap to methods 
+0.5 say hi to new duckies! 
 1. captured regexp groups
 2. make a "PONG" for their PING ;)
     - when twitch PINGs, do we have to PONG?

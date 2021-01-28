@@ -20,27 +20,38 @@ class Charlie
     @client.flush
   end
 
+  # Alice: !echo Im so pretty 
+  # where_is_x_bot: I'm so pretty 
+
+
+
   def listen
     @listening = true
     spawn do
       while listening && (line = @client.gets)
         puts line
-        if line == "PING :tmi.twitch.tv"
-          say("oh hello thar")
-        end
-        match = line.match(/^:(.+)!.+ PRIVMSG #\w+ :(.+)$/)
-
-        if match
-          user = match[1]
-          message = match[2]
-
-          if COMMAND_VOCABULARY[message]?
-            say(COMMAND_VOCABULARY[message])
-          end
-        end
+        if ping?(line)
+          handle_ping(line)
+        else 
+          match= line.match(/^:(.+)!.+ PRIVMSG #\w+ :(.+)$/)
+          handle_message(match) if match 
       end
     end
   end
+
+  def handle_message(match)
+    user = match[1]
+    message = match[2]
+
+    # message => "!echo stuff" 
+    # split into command and then "stuff"
+
+    if COMMAND_VOCABULARY[message]?
+      say(COMMAND_VOCABULARY[message])
+    else 
+      
+    end
+  end 
 
   def goodbye
     say("🌊 bye")
@@ -53,4 +64,14 @@ class Charlie
     @client.close
     puts "\n🌊\n"
   end
+
+  private 
+
+  def ping?(line)
+    return line == "PING :tmi.twitch.tv"
+  end 
+
+  def handle_ping(line : String)
+    say PONG_FACTS[Random.rand(PONG_FACTS.size)] # "PONG" :>
+  end 
 end

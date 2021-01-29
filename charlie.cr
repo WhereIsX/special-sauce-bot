@@ -15,15 +15,14 @@ class Charlie
     say("🌊 hi")
   end
 
+  # deal with this!
   def say(message : String)
     @client.puts("PRIVMSG ##{@channel_name} :#{message} \r\n")
     @client.flush
   end
 
-  # Alice: !echo Im so pretty 
-  # where_is_x_bot: I'm so pretty 
-
-
+  # Alice: !echo Im so pretty
+  # where_is_x_bot: I'm so pretty
 
   def listen
     @listening = true
@@ -31,27 +30,33 @@ class Charlie
       while listening && (line = @client.gets)
         puts line
         if ping?(line)
-          handle_ping(line)
-        else 
-          match= line.match(/^:(.+)!.+ PRIVMSG #\w+ :(.+)$/)
-          handle_message(match) if match 
+          answer_ping(line)
+        else
+          match = line.match(/^:(.+)!.+ PRIVMSG #\w+ :(.+)$/)
+          respond(match) if match
+        end
       end
     end
   end
 
-  def handle_message(match)
+  def respond(match)
     user = match[1]
-    message = match[2]
+    stuff = match[2].split(' ')
+    command = stuff.shift
+    stuff = stuff.join(' ')
 
-    # message => "!echo stuff" 
-    # split into command and then "stuff"
-
-    if COMMAND_VOCABULARY[message]?
-      say(COMMAND_VOCABULARY[message])
-    else 
-      
+    if weturn = COMMAND_VOCABULARY[command]? # weturn => return => naming things is hard
+      p! weturn.arity
+      case weturn.arity
+      when 0
+        # say(weturn.call)
+        puts "0"
+      when 1
+        say(weturn.call(stuff))
+        puts "1"
+      end
     end
-  end 
+  end
 
   def goodbye
     say("🌊 bye")
@@ -65,13 +70,11 @@ class Charlie
     puts "\n🌊\n"
   end
 
-  private 
-
   def ping?(line)
     return line == "PING :tmi.twitch.tv"
-  end 
+  end
 
-  def handle_ping(line : String)
+  def answer_ping(line : String)
     say PONG_FACTS[Random.rand(PONG_FACTS.size)] # "PONG" :>
-  end 
+  end
 end

@@ -46,15 +46,7 @@ class Charlie
     stuff = stuff.join(' ')
 
     if weturn = COMMAND_VOCABULARY[command]? # weturn => return => naming things is hard
-      p! weturn.arity
-      case weturn.arity
-      when 0
-        # say(weturn.call)
-        puts "0"
-      when 1
-        say(weturn.call(stuff))
-        puts "1"
-      end
+      say(weturn.call(stuff))
     end
   end
 

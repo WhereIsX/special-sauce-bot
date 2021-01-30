@@ -6,16 +6,6 @@ COMMAND_VOCABULARY = {
   "!ping"     => ->cmd_ping(String),
 }
 
-PONG_FACTS = [
-  ":ping_pong: is a nice game",
-  ":ping_pong: yourself",
-  ":ping_pong: https://en.wikipedia.org/wiki/Pong",
-  ":ping_pong: gers",
-  "29 November 1972 is when :ping_pong: was released",
-  ":ping_pong: was the first game developed by atari",
-  ":ping_pong: https://en.wikipedia.org/wiki/Pong#/media/File:Signed_Pong_Cabinet.jpg",
-]
-
 def cmd_help(stuff : String)
   intro_bit = "the commands are: "
   keys_bit = COMMAND_VOCABULARY.keys.sort.join(" | ")
@@ -39,36 +29,3 @@ end
 def cmd_ping(stuff : String)
   return PONG_FACTS.sample
 end
-
-TWITCH_MOD_COMMANDS = [
-  "/ban",
-  "/clear",
-  "/disconnect",
-  "/emoteonly",
-  "/emoteonlyoff",
-  "/followers",
-  "/followersoff",
-  "/host",
-  "/marker",
-  "/me",
-  "/mod",
-  "/mods",
-  "/raid",
-  "/slow",
-  "/slowoff",
-  "/subscribers",
-  "/subscribersoff",
-  "/timeout",
-  "/unban",
-  "/unblock",
-  "/unhost",
-  "/uniquechat",
-  "/uniquechatoff",
-  "/unmod",
-  "/unraid",
-  "/unvip",
-  "/user",
-  "/vip",
-  "/vips",
-  "/w",
-]

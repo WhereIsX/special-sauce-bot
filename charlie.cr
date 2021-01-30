@@ -1,4 +1,5 @@
 require "./command.cr"
+require "./other_constants.cr"
 
 class Charlie
   getter listening

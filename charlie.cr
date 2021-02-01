@@ -1,5 +1,6 @@
 require "./command.cr"
 require "./other_constants.cr"
+require "http/server"
 
 class Charlie
   getter listening
@@ -23,11 +24,25 @@ class Charlie
   end
 
   def serve
+    # do in a fiber(thread):
+    server_port = 8080
+    spawn do
+      server = HTTP::Server.new do |context|
+        context.response.content_type = "text/plain"
+        context.response.print "Hello world! The time is #{Time.local}"
+      end
+
+      address = server.bind_tcp(server_port)
+      puts "Listening on http://#{address}"
+      server.listen
+    end
+
+    `pagekite.py #{server_port} whereisxbotakacharlie.pagekite.me`
     # start up the server
-    # start up ngrok
-    # figure out where our ngrok endpoint is
+    # start up pagekite
+
     # pass it to twitch
-    #
+
   end
 
   # Alice: !echo Im so pretty

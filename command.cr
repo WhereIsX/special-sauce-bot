@@ -4,6 +4,7 @@ COMMAND_VOCABULARY = {
   "!echo"     => ->cmd_echo(String),
   "!emojis"   => ->cmd_emojis(String),
   "!ping"     => ->cmd_ping(String),
+  "!sauce"    => ->cmd_sauce(String),
 }
 
 def cmd_help(stuff : String)
@@ -28,4 +29,8 @@ end
 
 def cmd_ping(stuff : String)
   return PONG_FACTS.sample
+end
+
+def cmd_sauce(stuff : String)
+  return "https://github.com/WhereIsX/special-sauce-bot"
 end

@@ -22,6 +22,14 @@ class Charlie
     @client.flush
   end
 
+  def serve
+    # start up the server
+    # start up ngrok
+    # figure out where our ngrok endpoint is
+    # pass it to twitch
+    #
+  end
+
   # Alice: !echo Im so pretty
   # where_is_x_bot: I'm so pretty
 

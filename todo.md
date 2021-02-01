@@ -7,7 +7,6 @@
 
 
 ### need a database(sqlite) for these
-thoughts for bot features
 when duckies use our emotes, we give them points?
 
 ### need a NLP for these

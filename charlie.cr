@@ -39,8 +39,6 @@ class Charlie
     spawn do
       `pagekite.py #{server_port} whereisxbotakacharlie.pagekite.me`
     end
-    # start up the server
-    # start up pagekite
 
     # pass it to twitch
 

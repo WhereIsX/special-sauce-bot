@@ -36,8 +36,9 @@ class Charlie
       puts "Listening on http://#{address}"
       server.listen
     end
-
-    `pagekite.py #{server_port} whereisxbotakacharlie.pagekite.me`
+    spawn do
+      `pagekite.py #{server_port} whereisxbotakacharlie.pagekite.me`
+    end
     # start up the server
     # start up pagekite
 

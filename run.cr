@@ -9,7 +9,7 @@ charlie = Charlie.new(
   channel_name: CHANNEL_NAME
 )
 
-# charlie.serve
+charlie.serve
 
 # charlie.say("talking from the run.cr file")
 charlie.listen

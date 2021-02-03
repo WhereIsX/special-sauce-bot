@@ -2,12 +2,16 @@
 0. say hi to new duckies! 
     - subscribe to twitch API? 
 1. captured regexp groups
-2. respond to @ us 
+2. respond to @where_is_x_bot
 
 
 
 ### need a database(sqlite) for these
-when duckies use our emotes, we give them points?
+choose duck-sona (Aylesbury Duck) -> animate these! in duck pond(js)
+when duckies use our emotes, we give them points?!
+!feed all 
+!feed < duck name >
+    - how we give duckies points 
 
 ### need a NLP for these
 SEMANTIC ANALYSIS!?

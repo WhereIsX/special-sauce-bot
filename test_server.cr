@@ -1,10 +1,6 @@
+require "./restful_server.cr"
 require "http/server"
 
-server = HTTP::Server.new do |context|
-  context.response.content_type = "text/plain"
-  context.response.print "Hello world! The time is #{Time.local}"
-end
-
-address = server.bind_tcp 8080
+address = RESTFUL_SERVER.bind_tcp 8081
 puts "Listening on http://#{address}"
-server.listen
+RESTFUL_SERVER.listen

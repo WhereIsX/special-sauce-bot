@@ -1,6 +1,7 @@
 require "./command.cr"
 require "./other_constants.cr"
 require "http/server"
+require "./restful_server.cr"
 
 class Charlie
   getter listening
@@ -27,21 +28,15 @@ class Charlie
     # do in a fiber(thread):
     server_port = 8080
     spawn do
-      server = HTTP::Server.new do |context|
-        context.response.content_type = "text/plain"
-        context.response.print "Hello world! The time is #{Time.local}"
-      end
-
-      address = server.bind_tcp(server_port)
+      address = RESTFUL_SERVER.bind_tcp(server_port)
       puts "Listening on http://#{address}"
-      server.listen
+      RESTFUL_SERVER.listen
     end
     spawn do
       `pagekite.py #{server_port} whereisxbotakacharlie.pagekite.me`
     end
 
     # pass it to twitch
-
   end
 
   # Alice: !echo Im so pretty

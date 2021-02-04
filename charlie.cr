@@ -1,6 +1,6 @@
+require "http/server"
 require "./command.cr"
 require "./other_constants.cr"
-require "http/server"
 require "./restful_server.cr"
 
 class Charlie

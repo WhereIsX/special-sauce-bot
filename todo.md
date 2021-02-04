@@ -1,4 +1,5 @@
 # TODO
+-1. setup github key  
 0. say hi to new duckies! 
     - subscribe to twitch API? 
 1. captured regexp groups

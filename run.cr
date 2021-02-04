@@ -1,12 +1,11 @@
 require "./charlie.cr"
-require "./secrets.cr"
 require "socket"
 require "openssl"
 
 charlie = Charlie.new(
-  token: TWITCH_TOKEN,
-  bot_name: BOT_NAME,
-  channel_name: CHANNEL_NAME
+  token: ENV["TWITCH_TOKEN"],
+  bot_name: ENV["BOT_NAME"],
+  channel_name: ENV["CHANNEL_NAME"],
 )
 
 charlie.serve

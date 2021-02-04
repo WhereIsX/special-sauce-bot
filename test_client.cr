@@ -16,8 +16,8 @@ tw_ex_body = {
 }
 z_body = tw_ex_body.to_json
 
-z_head = HTTP::Headers{"Client-ID"     => TWITCH_APP_ID,
-                       "Authorization" => "Bearer #{TWITCH_APP_SECRET}",
+z_head = HTTP::Headers{"Client-ID"     => ENV["TWITCH_APP_ID"],
+                       "Authorization" => "Bearer #{ENV["TWITCH_APP_SECRET"]}",
                        "Content-Type"  => "application/json"}
 
 response = HTTP::Client.post(

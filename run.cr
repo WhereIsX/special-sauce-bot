@@ -3,7 +3,7 @@ require "socket"
 require "openssl"
 
 charlie = Charlie.new(
-  token: ENV["TWITCH_TOKEN"],
+  token: ENV["TWITCH_CHAT_TOKEN"],
   bot_name: ENV["BOT_NAME"],
   channel_name: ENV["CHANNEL_NAME"],
 )

@@ -11,8 +11,11 @@ class Charlie
     @channel_name = channel_name
     @client = OpenSSL::SSL::Socket::Client.new(tcp_sock)
 
+    p! bot_name
+    p! channel_name
+
     @client.puts("PASS #{token}")
-    @client.puts("NICK #{bot_name}")
+    @client.puts("NICK #{bot_name}") # twitch doesn't seem to use this...
     @client.puts("JOIN ##{channel_name}")
     puts "I'm alive!"
     say("🌊 hi")

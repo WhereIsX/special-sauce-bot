@@ -5,6 +5,7 @@ COMMAND_VOCABULARY = {
   "!emojis"   => ->cmd_emojis(String),
   "!ping"     => ->cmd_ping(String),
   "!sauce"    => ->cmd_sauce(String),
+  "!so"       => ->cmd_shoutout(String),
 }
 
 def cmd_help(stuff : String)
@@ -27,10 +28,18 @@ def cmd_emojis(stuff : String)
   return "Waaat Shears Woool QuackTogether"
 end
 
+def cmd_feed(stuff : String)
+  return ":>"
+end
+
 def cmd_ping(stuff : String)
   return PONG_FACTS.sample
 end
 
 def cmd_sauce(stuff : String)
   return "https://github.com/WhereIsX/special-sauce-bot"
+end
+
+def cmd_shoutout(stuff : String)
+  big_thing = `twitch api get search/channels?query=#{stuff}`
 end

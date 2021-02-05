@@ -1,4 +1,3 @@
-require "./secrets.cr"
 require "http/client"
 require "json"
 
@@ -10,14 +9,16 @@ tw_ex_body = {
   },
   "transport": {
     "method":   "webhook",
-    "callback": "https://example.com/webhooks/callback",
-    "secret":   "s3cRe7",
+    "callback": "https://whereisxbotakacharlie.pagekite.me/webhooks/callback",
+    "secret":   "ducks are getting hungry",
   },
 }
 z_body = tw_ex_body.to_json
 
+# secret = `twitch token -u -s channel:read:subscriptions`
+
 z_head = HTTP::Headers{"Client-ID"     => ENV["TWITCH_APP_ID"],
-                       "Authorization" => "Bearer #{ENV["TWITCH_APP_SECRET"]}",
+                       "Authorization" => "Bearer #{ENV["TWITCH_APP_ACCESS_TOKEN"]}",
                        "Content-Type"  => "application/json"}
 
 response = HTTP::Client.post(
@@ -26,7 +27,7 @@ response = HTTP::Client.post(
   body: z_body,
 )
 p! response.status_code # => 200
-p! response.body        # => "<!doctype html>"
+p! JSON.parse(response.body)
 
 # POST https://api.twitch.tv/helix/eventsub/subscriptions
 # ----

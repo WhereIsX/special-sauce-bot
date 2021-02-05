@@ -1,3 +1,6 @@
+require "http/server"
+require "json"
+
 RESTFUL_SERVER = HTTP::Server.new do |context|
   # routes
   case context.request.path
@@ -5,6 +8,11 @@ RESTFUL_SERVER = HTTP::Server.new do |context|
     context.response.print "landing zone"
   when "/webhooks/callback"
     puts "THIS IS YOUR SERVER SPEAKING: twitch hit us"
+    if context.request.body # tells the compiler that it's not nil!!
+      challenge = JSON.parse(context.request.body)
+      p! challenge
+    end
+    context.response.print challenge
     # if actually_twitch?(header)
     #   extract important info
     # else

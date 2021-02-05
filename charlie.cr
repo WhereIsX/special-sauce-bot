@@ -1,4 +1,3 @@
-require "http/server"
 require "./command.cr"
 require "./other_constants.cr"
 require "./restful_server.cr"

@@ -5,7 +5,8 @@ tw_ex_body = {
   "type":      "channel.follow",
   "version":   "1",
   "condition": {
-    "broadcaster_user_id": "12826",
+    # "broadcaster_user_id": "110751694", # our channel id
+    "broadcaster_user_id": "12826", # twitch channel id
   },
   "transport": {
     "method":   "webhook",

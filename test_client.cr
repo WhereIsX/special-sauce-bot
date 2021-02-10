@@ -37,12 +37,13 @@ def get_all_subscriptions
     url: "https://api.twitch.tv/helix/eventsub/subscriptions",
     headers: HEADERS,
   )
-  # subs = JSON.parse(resp.body).dig?("data")
-  # subs.collect do |sub|
-  #   sub["id"]
-  # end
-  # p! subs
-  p! JSON.parse resp.body
+  subs = JSON.parse(resp.body).dig?("data")
+  if subs
+    thingy = [Hash(String, String)]
+    i = 0
+    while i += 1
+    end
+  end
 end
 
 def delete_a_subscription(id : String)
@@ -58,6 +59,7 @@ loop do
     1. subscribe to follows 
     2. get all subscriptions
     3. delete a subscription  
+    4. get me outta here! 
     HELPER
 
   case gets.not_nil!.chomp
@@ -69,5 +71,9 @@ loop do
     puts "whats the id, duc?"
     id = gets.not_nil!.chomp
     delete_a_subscription(id)
+  when "4"
+    break
+  else
+    puts "how'd we get here?"
   end
 end

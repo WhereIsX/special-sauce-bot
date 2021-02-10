@@ -1,50 +1,73 @@
 require "http/client"
 require "json"
 
-tw_ex_body = {
-  "type":      "channel.follow",
-  "version":   "1",
-  "condition": {
-    # "broadcaster_user_id": "110751694", # our channel id
-    "broadcaster_user_id": "12826", # twitch channel id
-  },
-  "transport": {
-    "method":   "webhook",
-    "callback": "https://whereisxbotakacharlie.pagekite.me/webhooks/callback",
-    "secret":   "ducks are getting hungry",
-  },
+HEADERS = HTTP::Headers{
+  "Client-ID"     => ENV["TWITCH_APP_ID"],
+  "Authorization" => "Bearer #{ENV["TWITCH_APP_ACCESS_TOKEN"]}",
+  "Content-Type"  => "application/json",
 }
-z_body = tw_ex_body.to_json
 
-# secret = `twitch token -u -s channel:read:subscriptions`
+def subscribe_to_follows(broadcaster_user_id = "110751694")
+  tw_ex_body = {
+    "type":      "channel.follow",
+    "version":   "1",
+    "condition": {
+      "broadcaster_user_id": broadcaster_user_id, # "broadcaster_user_id": "12826", # twitch channel id
+    },
+    "transport": {
+      "method":   "webhook",
+      "callback": "https://whereisxbotakacharlie.pagekite.me/webhooks/callback",
+      # "secret":   ENV["TWITCH_HMAC_KEY"],
+      "secret": "the ducks are getting hungry",
+    },
+  }
+  z_body = tw_ex_body.to_json
 
-z_head = HTTP::Headers{"Client-ID"     => ENV["TWITCH_APP_ID"],
-                       "Authorization" => "Bearer #{ENV["TWITCH_APP_ACCESS_TOKEN"]}",
-                       "Content-Type"  => "application/json"}
+  response = HTTP::Client.post(
+    url: "https://api.twitch.tv/helix/eventsub/subscriptions",
+    headers: HEADERS,
+    body: z_body,
+  )
+  p! response.status_code # => 200
+  p! JSON.parse(response.body)
+end
 
-response = HTTP::Client.post(
-  url: "https://api.twitch.tv/helix/eventsub/subscriptions",
-  headers: z_head,
-  body: z_body,
-)
-p! response.status_code # => 200
-p! JSON.parse(response.body)
+def get_all_subscriptions
+  resp = HTTP::Client.get(
+    url: "https://api.twitch.tv/helix/eventsub/subscriptions",
+    headers: HEADERS,
+  )
+  # subs = JSON.parse(resp.body).dig?("data")
+  # subs.collect do |sub|
+  #   sub["id"]
+  # end
+  # p! subs
+  p! JSON.parse resp.body
+end
 
-# POST https://api.twitch.tv/helix/eventsub/subscriptions
-# ----
-# Client-ID:     crq72vsaoijkc83xx42hz6i37
-# Authorization: Bearer C0BIYxs4JvnBWqvAmBvjfFc
-# Content-Type: application/json
-# ----
-# {
-#     "type": "channel.follow",
-#     "version": "1",
-#     "condition": {
-#         "broadcaster_user_id": "12826"
-#     },
-#     "transport": {
-#         "method": "webhook",
-#         "callback": "https://example.com/webhooks/callback",
-#         "secret": "s3cRe7"
-#     }
-# }
+def delete_a_subscription(id : String)
+  HTTP::Client.delete(
+    url: "https://api.twitch.tv/helix/eventsub/subscriptions?id=#{id}",
+    headers: HEADERS,
+  )
+end
+
+loop do
+  puts <<-HELPER
+    what would you like me to do today? (respond with the corresponding number)
+    1. subscribe to follows 
+    2. get all subscriptions
+    3. delete a subscription  
+    HELPER
+
+  case gets.not_nil!.chomp
+  when "1"
+    subscribe_to_follows()
+  when "2"
+    get_all_subscriptions()
+  when "3"
+    puts "whats the id, duc?"
+    id = gets.not_nil!.chomp
+    delete_a_subscription(id)
+  end
+end

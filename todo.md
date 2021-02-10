@@ -1,7 +1,9 @@
 # TODO
--1. setup github key  
+ 
 0. say hi to new duckies! 
     - subscribe to twitch API? 
+
+0.5. rename restful_server
 1. captured regexp groups
 2. respond to @where_is_x_bot
 

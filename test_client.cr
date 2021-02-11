@@ -17,13 +17,13 @@ def subscribe_to_follows(broadcaster_user_id = "110751694")
     "transport": {
       "method":   "webhook",
       "callback": "https://whereisxbotakacharlie.pagekite.me/webhooks/callback",
-      # "secret":   ENV["TWITCH_HMAC_KEY"],
-      "secret": "the ducks are getting hungry",
+      "secret":   ENV["TWITCH_HMAC_KEY"],
+      # "secret": "the ducks are getting hungry",
     },
   }
   z_body = tw_ex_body.to_json
 
-  response = HTTP::Client.post(
+  response = HTTP::Client.post(z
     url: "https://api.twitch.tv/helix/eventsub/subscriptions",
     headers: HEADERS,
     body: z_body,
@@ -37,11 +37,31 @@ def get_all_subscriptions
     url: "https://api.twitch.tv/helix/eventsub/subscriptions",
     headers: HEADERS,
   )
-  subs = JSON.parse(resp.body).dig?("data")
-  if subs
-    thingy = [Hash(String, String)]
-    i = 0
-    while i += 1
+  data = JSON.parse(resp.body).dig?("data")
+  if data
+    data.as_a.each do |sub|
+      stuff_to_show_user = <<-SHOW
+        type: #{sub["type"]}
+        condition: #{sub["condition"]}
+        status: #{sub["status"]}
+        id: #{sub["id"]}\n\n
+      SHOW
+
+      puts stuff_to_show_user
+    end
+  end
+  # make this print something if theres 0 subscriptions
+end
+
+def delete_all_subscriptions
+  resp = HTTP::Client.get(
+    url: "https://api.twitch.tv/helix/eventsub/subscriptions",
+    headers: HEADERS,
+  )
+  data = JSON.parse(resp.body).dig?("data")
+  if data
+    data.as_a.each do |sub|
+      delete_a_subscription(sub["id"].to_s)
     end
   end
 end
@@ -55,11 +75,12 @@ end
 
 loop do
   puts <<-HELPER
-    what would you like me to do today? (respond with the corresponding number)
+    \n\nwhat would you like me to do today? (respond with the corresponding number)
     1. subscribe to follows 
     2. get all subscriptions
     3. delete a subscription  
-    4. get me outta here! 
+    4. delete all subscriptions
+    5. get me outta here! 
     HELPER
 
   case gets.not_nil!.chomp
@@ -72,6 +93,8 @@ loop do
     id = gets.not_nil!.chomp
     delete_a_subscription(id)
   when "4"
+    delete_all_subscriptions()
+  when "5"
     break
   else
     puts "how'd we get here?"

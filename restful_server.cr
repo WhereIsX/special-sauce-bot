@@ -8,12 +8,7 @@ RESTFUL_SERVER = HTTP::Server.new do |context|
   when "/"
     context.response.print "landing zone"
   when "/webhooks/callback"
-    if actually_twitch?(context.request.headers, context.request.body)
-      webhook_callback(context)
-    else
-      puts "💁 THIS IS YOUR SERVER SPEAKING: they not actually twitch >:("
-      context.response.status = HTTP::Status::FORBIDDEN
-    end
+    handle_webhook_callback(context)
   else
     puts "💁 THIS IS YOUR SERVER SPEAKING: they tried to go #{context.request.path}"
     context.response.print "ay, you thar! where do you think you're going?!"
@@ -21,27 +16,37 @@ RESTFUL_SERVER = HTTP::Server.new do |context|
   context.response.content_type = "text/plain"
 end
 
-def webhook_callback(context)
-  puts "💁 THIS IS YOUR SERVER SPEAKING: twitch hit us"
+def handle_webhook_callback(context)
   if body = context.request.body
-    jaybay = JSON.parse(body)
-    puts "\n#{jaybay}\n\n"
-    if jaybay["challenge"]?
-      context.response.print jaybay["challenge"]
-    elsif jaybay["event"]?
-      user = jaybay["event"]["user_name"]?
-      broadcaster = jaybay["event"]["broadcaster_user_name"]?
-      puts "💁 THIS IS YOUR SERVER SPEAKING: #{user} followed #{broadcaster}"
+    raw_body = body.gets_to_end
+    if actually_twitch?(context.request.headers, raw_body)
+      reply_to_twitch(context, raw_body)
+    else
+      puts "💁 THIS IS YOUR SERVER SPEAKING: they not actually twitch >:("
+      context.response.status = HTTP::Status::FORBIDDEN
     end
+  end
+end
+
+def reply_to_twitch(context, raw_body)
+  puts "💁 THIS IS YOUR SERVER SPEAKING: twitch hit us"
+  jaybay = JSON.parse(raw_body)
+  puts "\n#{jaybay}\n\n"
+  if jaybay["challenge"]?
+    context.response.print jaybay["challenge"]
+  elsif jaybay["event"]?
+    user = jaybay["event"]["user_name"]?
+    broadcaster = jaybay["event"]["broadcaster_user_name"]?
+    puts "💁 THIS IS YOUR SERVER SPEAKING: #{user} followed #{broadcaster}"
   end
 end
 
 # verify that the request is valid (actually from twitch)
 # derived from twitch api: https://dev.twitch.tv/docs/eventsub#pseudocode
-def actually_twitch?(headers, body)
+def actually_twitch?(headers, raw_body)
   hmac_message = headers["Twitch-Eventsub-Message-Id"] +
                  headers["Twitch-Eventsub-Message-Timestamp"] +
-                 body.to_s
+                 raw_body
   signature = OpenSSL::HMAC.hexdigest(
     algorithm: OpenSSL::Algorithm::SHA256,
     key: ENV["TWITCH_HMAC_KEY"],
@@ -49,8 +54,9 @@ def actually_twitch?(headers, body)
     data: hmac_message,
   )
   expected_signature_header = "sha256=" + signature
-
-  return headers["Twitch-Eventsub-Message-Signature"] == expected_signature_header
+  result = headers["Twitch-Eventsub-Message-Signature"] == expected_signature_header
+  p! result
+  return result
 end
 
 def extract(body)

@@ -41,5 +41,5 @@ def cmd_sauce(stuff : String)
 end
 
 def cmd_shoutout(stuff : String)
-  big_thing = `twitch api get search/channels?query=#{stuff}`
+  search_result = `twitch api get search/channels?query=#{stuff}`
 end

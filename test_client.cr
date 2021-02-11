@@ -1,6 +1,22 @@
 require "http/client"
 require "json"
 
+
+# MVP:
+# assume user has:
+#   - client id
+#   - auth token
+#   - broadcaster_user_id 
+# first post MVP feature: 
+#     we delagate to twitch-cli to retrieve above info.
+
+# 1. prompt userto enter credentials if we can't any saved
+# 1a. ask user if they want it saved (to file)
+# 2. CRUD subsriptions:
+# 2a. when deleting, confirm w user to save them butterfingers
+# NCRUSES! (learn to how ncurses first maybe?)
+# bonus: hold state of all subscriptions
+
 HEADERS = HTTP::Headers{
   "Client-ID"     => ENV["TWITCH_APP_ID"],
   "Authorization" => "Bearer #{ENV["TWITCH_APP_ACCESS_TOKEN"]}",

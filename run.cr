@@ -3,15 +3,22 @@ require "./bobbie.cr"
 require "socket"
 require "openssl"
 
+alias Following_Info = NamedTuple(broadcaster: String, user: String)
+
+channel = Channel(Following_Info).new
+
 charlie = Charlie.new(
   token: ENV["TWITCH_CHAT_TOKEN"],
   bot_name: ENV["BOT_NAME"],
   channel_name: ENV["CHANNEL_NAME"],
+  knit_between_fibers: channel,
 )
 
 charlie.listen
 
-bobbie = Bobbie.new
+bobbie = Bobbie.new(
+  knit_between_fibers: channel
+)
 
 bobbie.listen
 

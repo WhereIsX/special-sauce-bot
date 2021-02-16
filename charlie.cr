@@ -4,9 +4,10 @@ require "./other_constants.cr"
 class Charlie
   getter listening
 
-  def initialize(token : String, bot_name : String, channel_name : String)
-    tcp_sock = TCPSocket.new("irc.chat.twitch.tv", 6697)
+  def initialize(token : String, bot_name : String, channel_name : String, knit_between_fibers : Channel(Following_Info))
     @channel_name = channel_name
+    @knit_between_fibers = knit_between_fibers
+    tcp_sock = TCPSocket.new("irc.chat.twitch.tv", 6697)
     @client = OpenSSL::SSL::Socket::Client.new(tcp_sock)
 
     @client.puts("PASS #{token}")

@@ -17,14 +17,12 @@ class Charlie
     say("🌊 hi")
   end
 
-  # deal with this!
   def say(message : String)
     @client.puts("PRIVMSG ##{@channel_name} :#{message} \r\n")
     @client.flush
   end
 
   def serve
-    # do in a fiber(thread):
     server_port = 8080
     spawn do
       address = RESTFUL_SERVER.bind_tcp(server_port)
@@ -37,9 +35,6 @@ class Charlie
 
     # pass it to twitch
   end
-
-  # Alice: !echo Im so pretty
-  # where_is_x_bot: I'm so pretty
 
   def listen
     @listening = true

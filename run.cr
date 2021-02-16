@@ -8,8 +8,6 @@ charlie = Charlie.new(
   channel_name: ENV["CHANNEL_NAME"],
 )
 
-charlie.serve
-
 charlie.listen
 Signal::INT.trap { charlie.goodbye; exit }
 

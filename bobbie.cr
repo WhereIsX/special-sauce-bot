@@ -16,6 +16,18 @@ RESTFUL_SERVER = HTTP::Server.new do |context|
   context.response.content_type = "text/plain"
 end
 
+# def serve
+#   server_port = 8080
+#   spawn do
+#     address = RESTFUL_SERVER.bind_tcp(server_port)
+#     puts "Listening on http://#{address}"
+#     RESTFUL_SERVER.listen
+#   end
+#   spawn do
+#     `pagekite.py #{server_port} whereisxbotakacharlie.pagekite.me`
+#   end
+# end
+
 def handle_webhook_callback(context)
   if body = context.request.body
     raw_body = body.gets_to_end

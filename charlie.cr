@@ -1,6 +1,5 @@
 require "./command.cr"
 require "./other_constants.cr"
-require "./restful_server.cr"
 
 class Charlie
   getter listening
@@ -20,18 +19,6 @@ class Charlie
   def say(message : String)
     @client.puts("PRIVMSG ##{@channel_name} :#{message} \r\n")
     @client.flush
-  end
-
-  def serve
-    server_port = 8080
-    spawn do
-      address = RESTFUL_SERVER.bind_tcp(server_port)
-      puts "Listening on http://#{address}"
-      RESTFUL_SERVER.listen
-    end
-    spawn do
-      `pagekite.py #{server_port} whereisxbotakacharlie.pagekite.me`
-    end
   end
 
   def listen

@@ -52,9 +52,9 @@ def cmd_shoutout(username : String)
   return "nice try, 👅" if !valid_username?(username)
   search_result = `twitch api get search/channels?query=#{username}`
   data = JSON.parse(search_result).dig("data") # => JSON::Any
-  user = data.as_a.find { |user| user["display_name"] == username }
+  user = data.as_a.find { |user| user["display_name"].to_s.downcase == username.downcase }
   if user
-    return "go check out twitch.tv/#{username}, they were last working on '#{user["title"]}'"
+    return "go check out twitch.tv/#{user["display_name"]}, they were last working on '#{user["title"]}'"
   else
     return "you can't spell mate"
   end

@@ -1,4 +1,5 @@
 require "./charlie.cr"
+require "./bobbie.cr"
 require "socket"
 require "openssl"
 
@@ -9,7 +10,13 @@ charlie = Charlie.new(
 )
 
 charlie.listen
+
+bobbie = Bobbie.new
+
+bobbie.listen
+
 Signal::INT.trap { charlie.goodbye; exit }
+# bobbie.goodbye please
 
 while charlie.listening && (yana_says = gets)
   yana_says = yana_says.chomp

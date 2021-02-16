@@ -61,6 +61,7 @@ class Bobbie
     elsif jaybay["event"]?
       user = jaybay["event"]["user_name"]?
       broadcaster = jaybay["event"]["broadcaster_user_name"]?
+      @knit_between_fibers.send({user: user.to_s, broadcaster: broadcaster.to_s})
       puts "💁 THIS IS YOUR SERVER SPEAKING: #{user} followed #{broadcaster}"
     end
   end

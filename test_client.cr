@@ -1,13 +1,12 @@
 require "http/client"
 require "json"
 
-
 # MVP:
 # assume user has:
 #   - client id
 #   - auth token
-#   - broadcaster_user_id 
-# first post MVP feature: 
+#   - broadcaster_user_id
+# first post MVP feature:
 #     we delagate to twitch-cli to retrieve above info.
 
 # 1. prompt userto enter credentials if we can't any saved
@@ -39,7 +38,7 @@ def subscribe_to_follows(broadcaster_user_id = "110751694")
   }
   z_body = tw_ex_body.to_json
 
-  response = HTTP::Client.post(z
+  response = HTTP::Client.post(
     url: "https://api.twitch.tv/helix/eventsub/subscriptions",
     headers: HEADERS,
     body: z_body,

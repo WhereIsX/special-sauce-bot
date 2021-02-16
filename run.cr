@@ -5,7 +5,7 @@ require "openssl"
 
 alias Following_Info = NamedTuple(broadcaster: String, user: String)
 
-channel = Channel(Following_Info).new
+channel = Channel(Following_Info).new(10)
 
 charlie = Charlie.new(
   token: ENV["TWITCH_CHAT_TOKEN"],

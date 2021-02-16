@@ -32,8 +32,6 @@ class Charlie
     spawn do
       `pagekite.py #{server_port} whereisxbotakacharlie.pagekite.me`
     end
-
-    # pass it to twitch
   end
 
   def listen

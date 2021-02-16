@@ -10,7 +10,6 @@ charlie = Charlie.new(
 
 charlie.serve
 
-# charlie.say("talking from the run.cr file")
 charlie.listen
 Signal::INT.trap { charlie.goodbye; exit }
 

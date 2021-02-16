@@ -1,3 +1,5 @@
+require "json"
+
 COMMAND_VOCABULARY = {
   "!help"     => ->cmd_help(String),
   "!commands" => ->cmd_help(String),
@@ -40,6 +42,20 @@ def cmd_sauce(stuff : String)
   return "https://github.com/WhereIsX/special-sauce-bot"
 end
 
-def cmd_shoutout(stuff : String)
-  search_result = `twitch api get search/channels?query=#{stuff}`
+# does username try to escape and call more stuff in our terminal?!
+def valid_username?(username : String)
+  /^[A-Za-z0-9_]{4,25}$/.matches?(username)
+end
+
+def cmd_shoutout(username : String)
+  p! username
+  return "nice try, 👅" if !valid_username?(username)
+  search_result = `twitch api get search/channels?query=#{username}`
+  data = JSON.parse(search_result).dig("data") # => JSON::Any
+  user = data.as_a.find { |user| user["display_name"] == username }
+  if user
+    return "go check out twitch.tv/#{username}, they were last working on '#{user["title"]}'"
+  else
+    return "you can't spell mate"
+  end
 end

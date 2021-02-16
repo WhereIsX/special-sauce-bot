@@ -49,21 +49,20 @@ class Charlie
         if ping?(line)
           answer_ping(line)
         else
-          match = line.match(/^:(.+)!.+ PRIVMSG #\w+ :(.+)$/)
-          respond(match) if match
+          captures = line.match(/^:(?<username>.+)!.+ PRIVMSG #\w+ :(?<message>.+)$/)
+          respond(captures["username"], captures["message"]) if captures
         end
       end
     end
   end
 
-  def respond(match)
-    user = match[1]
-    stuff = match[2].split(' ')
-    command = stuff.shift
-    stuff = stuff.join(' ')
+  def respond(username : String, message : String)
+    message_array = message.split(' ')
+    command = message_array.shift
+    argument = message_array.join(' ')
 
     if weturn = COMMAND_VOCABULARY[command]? # weturn => return => naming things is hard
-      say(weturn.call(stuff))
+      say(weturn.call(argument))
     end
   end
 

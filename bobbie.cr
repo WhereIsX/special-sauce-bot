@@ -66,7 +66,7 @@ class Bobbie
     end
   end
 
-  # verify that the request is valid (actually from twitch)
+  # verify that the request is valid (actually from twitch) using checksum
   # derived from twitch api: https://dev.twitch.tv/docs/eventsub#pseudocode
   def actually_twitch?(headers, raw_body)
     hmac_message = headers["Twitch-Eventsub-Message-Id"] +
@@ -80,7 +80,6 @@ class Bobbie
     )
     expected_signature_header = "sha256=" + signature
     result = headers["Twitch-Eventsub-Message-Signature"] == expected_signature_header
-    p! result
     return result
   end
 

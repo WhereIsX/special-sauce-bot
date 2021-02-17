@@ -37,9 +37,9 @@ class Charlie
     end
 
     spawn do
-      following_event = @knit_between_fibers.receive
-      p! following_event
-      say("Thanks for quacking along #{following_event[:user]}")
+      while listening && (following_event = @knit_between_fibers.receive)
+        say("Thanks for quacking along #{following_event[:user]}")
+      end
     end
   end
 

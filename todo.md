@@ -1,19 +1,12 @@
 # TODO
- 
--1. whytf are fibers/channels nondeterministic in responding to new followers? 
-    - sending fiber ? 
-    - receiving fiber ?  
+
 
 
 0. say hi to new duckies! 
-    - ~~subscribe to twitch API for follows~~
     - [] subscribe to twitch API for subscribbles -
-
-
-~~0.5. rename restful_server~~
-~~1. captured regexp groups~~
+1. timestamp stuff printed to terminal :> 
 2. respond to @where_is_x_bot
-3. group channel point redemptions cooldown -> 
+3. group channel point redemptions cooldown -> twitch api 
 
 
 

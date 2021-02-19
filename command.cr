@@ -48,7 +48,6 @@ def valid_username?(username : String)
 end
 
 def cmd_shoutout(username : String)
-  p! username
   return "nice try, 👅" if !valid_username?(username)
   search_result = `twitch api get search/channels?query=#{username}`
   data = JSON.parse(search_result).dig("data") # => JSON::Any

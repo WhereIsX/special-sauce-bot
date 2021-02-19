@@ -4,6 +4,7 @@ require "socket"
 require "openssl"
 
 alias Following_Info = NamedTuple(broadcaster: String, user: String)
+# alias TwitchEvent = NamedTuple(event_type: String, broadcaster: String, user: String)
 
 channel = Channel(Following_Info).new(10)
 

@@ -30,12 +30,25 @@ class Bobbie
       @http_server.listen
     end
     spawn do
-      `pagekite.py #{server_port} whereisxbotakacharlie.pagekite.me`
+      @pagekite = Process.new(
+        command: "pagekite.py",
+        args: [server_port.to_s, "whereisxbotakacharlie.pagekite.me"]
+      )
     end
   end
 
   def goodbye
     @http_server.close
+    if pk = @pagekite
+      # pk.signal(Signal::INT)
+      pk.terminate
+      pk.wait
+      # if pk.terminated?
+      #   puts "we did it duckies!!"
+      # else
+      #   puts "wat"
+      # end
+    end
     # temporary solution:
     # pray to the gc / threading gods that pagekite closes
   end

@@ -1,7 +1,7 @@
 # TODO
 
 
-
+-1. runit / dumb-init
 0. say hi to new duckies! 
     - [] subscribe to twitch API for subscribbles -
 1. timestamp stuff printed to terminal :> 

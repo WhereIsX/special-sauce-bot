@@ -28,7 +28,9 @@ Signal::INT.trap { charlie.goodbye; exit }
 while charlie.listening && (yana_says = gets)
   yana_says = yana_says.chomp
   if yana_says == "quit"
-    Process.signal(signal: Signal::INT, pid: 0)
+    # Process.signal(signal: Signal::INT, pid: 0)
+    charlie.goodbye
+    bobbie.goodbye
   else
     charlie.say(yana_says)
   end

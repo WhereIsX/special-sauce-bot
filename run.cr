@@ -24,12 +24,11 @@ bobbie = Bobbie.new(
 bobbie.listen
 
 Signal::INT.trap { charlie.goodbye; exit }
-# bobbie.goodbye please
 
 while charlie.listening && (yana_says = gets)
   yana_says = yana_says.chomp
   if yana_says == "quit"
-    charlie.goodbye
+    Process.signal(signal: Signal::INT, pid: 0)
   else
     charlie.say(yana_says)
   end

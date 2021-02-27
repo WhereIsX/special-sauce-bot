@@ -49,7 +49,7 @@ class Charlie
     argument = message_array.join(' ')
 
     if weturn = COMMAND_VOCABULARY[command]? # weturn => return => naming things is hard
-      say(weturn.call(argument))
+      say(weturn.call(username, argument))
     end
   end
 

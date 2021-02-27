@@ -3,17 +3,27 @@ require "json"
 COMMAND_VOCABULARY = {
   "!help"     => ->cmd_help(String),
   "!commands" => ->cmd_help(String),
+  "!damn"     => ->cmd_damn(String),
   "!echo"     => ->cmd_echo(String),
   "!emojis"   => ->cmd_emojis(String),
+  "!leaked"   => ->cmd_leaked(String),
   "!ping"     => ->cmd_ping(String),
-  "!sauce"    => ->cmd_sauce(String),
+  "!sauce"    => ->cmd_sauce(String), # !recipe
   "!so"       => ->cmd_shoutout(String),
+}
+
+SUPER_COWS = Set{
+  "where_is_x", "muumijumala", "somethingaboutus",
 }
 
 def cmd_help(stuff : String)
   intro_bit = "the commands are: "
   keys_bit = COMMAND_VOCABULARY.keys.sort.join(" | ")
   return intro_bit + keys_bit
+end
+
+def cmd_damn(stuff : String)
+  return "eh?"
 end
 
 def cmd_echo(stuff : String)
@@ -32,6 +42,10 @@ end
 
 def cmd_feed(stuff : String)
   return ":>"
+end
+
+def cmd_leaked(stuff : String)
+  return "eh?"
 end
 
 def cmd_ping(stuff : String)

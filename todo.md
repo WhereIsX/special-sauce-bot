@@ -5,7 +5,7 @@
 0. say hi to new duckies! 
     - [] subscribe to twitch API for subscribbles -
 1. timestamp stuff printed to terminal :> 
-2. respond to @where_is_x_bot
+2. respond to @x_is_here bot
 3. group channel point redemptions cooldown -> twitch api 
 
 

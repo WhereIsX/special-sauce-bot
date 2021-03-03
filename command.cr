@@ -22,8 +22,17 @@ def cmd_help(username : String, duckie_args : String)
   return intro_bit + keys_bit
 end
 
+# def cmd_naked_yaks
+
 def cmd_damn(username : String, duckie_args : String)
-  return "eh?"
+  if SUPER_COWS.includes?(username)
+    File.open("last_leaked", "a") do |f| # time.to_rfc2822(file_location)
+      f.puts "#{Time.utc.to_rfc2822}"
+    end
+    return "success!"
+  else
+    return "no."
+  end
 end
 
 def cmd_echo(username : String, duckie_args : String)
@@ -45,10 +54,16 @@ def cmd_feed(username : String, duckie_args : String)
 end
 
 def cmd_leaked(username : String, duckie_args : String)
-  last_leaked = Time.utc(2021, 2, 27, 1)
-  days = (Time.utc - last_leaked).days
+  last_leaked = Time.parse_rfc2822(File.read("last_leaked").split("\n")[-2])
+  span = Time.utc - last_leaked
 
-  return "#{span} days since last leaked"
+  if span > 1.days
+    return "#{span.days} days since we last ducked up"
+  elsif span > 1.hours
+    return "#{span.hours} hours since we last ducked up"
+  else
+    return "#{span.minutes} minutes since we last ducked up"
+  end
 end
 
 def cmd_ping(username : String, duckie_args : String)

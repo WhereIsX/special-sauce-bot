@@ -1,0 +1,6 @@
+name: duck-feeder 
+version: 0.1.0
+
+dependencies:
+  sqlite3:
+    github: crystal-lang/crystal-sqlite3

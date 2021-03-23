@@ -1,5 +1,6 @@
-require "./charlie.cr"
-require "./bobbie.cr"
+require "./dblibrarian.cr"
+require "./chatty.cr"
+require "./servy.cr"
 require "socket"
 require "openssl"
 
@@ -8,30 +9,34 @@ alias Following_Info = NamedTuple(broadcaster: String, user: String)
 
 channel = Channel(Following_Info).new(10)
 
-charlie = Charlie.new(
+# IRC chat bot
+chatty = Chatty.new(
   token: ENV["TWITCH_CHAT_TOKEN"],
   bot_name: ENV["BOT_NAME"],
   channel_name: ENV["CHANNEL_NAME"],
   knit_between_fibers: channel,
 )
 
-charlie.listen
+chatty.listen
 
-bobbie = Bobbie.new(
+# HTTP server
+#   (endpoint for twitch eventsub)
+servy = Servy.new(
   knit_between_fibers: channel
 )
 
-bobbie.listen
+servy.listen
 
-Signal::INT.trap { charlie.goodbye; exit }
+Signal::INT.trap { chatty.goodbye; exit }
 
-while charlie.listening && (yana_says = gets)
+while chatty.listening && (yana_says = gets)
   yana_says = yana_says.chomp
   if yana_says == "quit"
     # Process.signal(signal: Signal::INT, pid: 0)
-    charlie.goodbye
-    bobbie.goodbye
+    chatty.goodbye
+    servy.goodbye
+    Commands::LIBRARIAN.goodbye
   else
-    charlie.say(yana_says)
+    chatty.say(yana_says)
   end
 end

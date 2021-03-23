@@ -2,7 +2,7 @@ require "http/server"
 require "openssl/hmac"
 require "json"
 
-class Bobbie
+class Servy
   def initialize(knit_between_fibers : Channel(Following_Info))
     @knit_between_fibers = knit_between_fibers
     @http_server = HTTP::Server.new do |context|

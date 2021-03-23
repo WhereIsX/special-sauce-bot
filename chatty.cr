@@ -1,10 +1,26 @@
 require "./command.cr"
 require "./other_constants.cr"
+require "json"
 
-class Charlie
+class Chatty
   getter listening
+  @@static_commands = Hash(String, String).new
+  self.reload_static_commands
 
-  def initialize(token : String, bot_name : String, channel_name : String, knit_between_fibers : Channel(Following_Info))
+  def self.reload_static_commands : Bool
+    @@static_commands.merge! Hash(String, String).from_json(File.read("commands.json"))
+    return true
+  rescue shit_json : JSON::ParseException
+    @@static_commands = Hash(String, String).new
+    puts "🤬 shit json"
+    return false
+  end
+
+  def initialize(token : String,
+                 bot_name : String,
+                 channel_name : String,
+                 knit_between_fibers : Channel(Following_Info))
+    @bot_name = bot_name
     @channel_name = channel_name
     @knit_between_fibers = knit_between_fibers
     tcp_sock = TCPSocket.new("irc.chat.twitch.tv", 6697)
@@ -25,12 +41,12 @@ class Charlie
   def listen
     @listening = true
     spawn do
-      while listening && (line = @client.gets)
-        puts line
-        if ping?(line)
-          answer_ping(line)
+      while listening && (irc_message = @client.gets)
+        puts irc_message
+        if ping?(irc_message)
+          answer_ping(irc_message)
         else
-          captures = line.match(/^:(?<username>.+)!.+ PRIVMSG #\w+ :(?<message>.+)$/)
+          captures = irc_message.match(/^:(?<username>.+)!.+ PRIVMSG #\w+ :(?<message>.+)$/)
           respond(captures["username"], captures["message"]) if captures
         end
       end
@@ -48,10 +64,20 @@ class Charlie
     command = message_array.shift
     argument = message_array.join(' ')
 
-    if weturn = COMMAND_VOCABULARY[command]? # weturn => return => naming things is hard
+    if command == "!reload" && SUPER_COWS.includes?(username)
+      if Chatty.reload_static_commands
+        say("you got it bawhs")
+      else # reload failed
+        say("theres probably some trailing comma in the shit json, ya wat")
+      end
+    elsif weturn = DYNAMIC_COMMANDS[command]? # weturn => return => naming things is hard
       say(weturn.call(username, argument))
+    elsif @@static_commands.has_key?(command)
+      say(@@static_commands[command])
     end
   end
+
+  # array << more_stuff
 
   def goodbye
     say("🌊 bye")

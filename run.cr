@@ -1,3 +1,8 @@
+# we're no strangers to code,
+# you know the rules and so do i.
+# a git commit's what i'm thinking of,
+# you wouldn't get this from any other lib you tried
+
 require "./dblibrarian.cr"
 require "./chatty.cr"
 require "./servy.cr"

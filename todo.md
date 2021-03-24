@@ -1,10 +1,4 @@
 # TODO
-    - database (sqlite)
-        - burn_record
-        - consent 
-        
-    - pagekite quota :>
-        - try to set up our website to have a route to handle the twitch eventsub api
     - say hi to new duckies! 
         - [] subscribe to twitch API for subscribbles -
     - timestamp stuff printed to terminal :> 

@@ -1,5 +1,6 @@
 require "./command.cr"
 require "./other_constants.cr"
+require "colorize"
 require "json"
 
 class Chatty
@@ -42,12 +43,19 @@ class Chatty
     @listening = true
     spawn do
       while listening && (irc_message = @client.gets)
-        puts irc_message
+        now = Time.local.to_s("%H:%M")
         if ping?(irc_message)
           answer_ping(irc_message)
+        elsif captures = irc_message.match(/^:(?<username>.+)!.+ PRIVMSG #\w+ :(?<message>.+)$/)
+          username = captures["username"]
+          message = captures["message"]
+          respond(username, message)
+
+          # db lookup of username 
+          # if no usename => use hashing fn to deterministically get color 
+          puts "#{now} #{username}: #{message} ".colorize(:light_magenta)
         else
-          captures = irc_message.match(/^:(?<username>.+)!.+ PRIVMSG #\w+ :(?<message>.+)$/)
-          respond(captures["username"], captures["message"]) if captures
+          puts "#{now} #{irc_message}".colorize(:red)
         end
       end
     end

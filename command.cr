@@ -40,7 +40,7 @@ module Commands
 
   enum Consents
     Water
-    AtMe
+    AtMe # TB deprecated
   end
 
   def self.cmd_consent(username : String, duckie_args : String) : String
@@ -69,14 +69,15 @@ module Commands
     end
   end
 
+  # 4'5 chad yana
   def self.cmd_damn(username : String, duckie_args : String)
     if SUPER_COWS.includes?(username)
       File.open("last_leaked", "a") do |f| # time.to_rfc2822(file_location)
         f.puts "#{Time.utc.to_rfc2822}"
       end
-      return "success!"
+      return "you get a new key! you get a new key! EVERYBODY GETS A NEW KEY!!"
     else
-      return "no."
+      return "not authorized to record a new !leaked keys time"
     end
   end
 
@@ -139,7 +140,14 @@ module Commands
   def self.cmd_water(username : String, duckie_args : String)
     # randomly picks a duck and tags them, asking them to drink
     # write to file for list of ducks for whom we have consent
-    return "HYDRATE! go get your feathers wet :>"
+    duckie = LIBRARIAN.get_duckie(duckie_args.downcase)
+    if duckie.nil?
+      return "no such duckie"
+    elsif duckie[:water_consent]
+      return "HYDRATE #{duckie_args}! go get your feathers wet :>"
+    else
+      return "they didn't give us consent to water them :<"
+    end
   end
 
   # does username try to escape and call more duckie_args in our terminal?!

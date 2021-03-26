@@ -1,7 +1,17 @@
 # TODO
+    - in the middle of moving files around + `require`s 
+    - fix ping thing: no longer puts when pinged by twitch 
+    - !pond_points :>  
+    - !counter_start <name> 
+    - !++ <counter_name>
+    - !-- <counter_name> 
+    - yak shaving counter 
+    - tests 
+    - supercows should be a table :D 
+    - whoami? --> all record holders get to see their own record
+    - make more emojis, subscribble badges 
     - say hi to new duckies! 
         - [] subscribe to twitch API for subscribbles -
-    - timestamp stuff printed to terminal :> 
     - https://dev.twitch.tv/docs/irc/guide#twitch-irc-capabilities tags and registration 
     - respond to @x_is_here bot
     - group channel point redemptions cooldown -> twitch api 

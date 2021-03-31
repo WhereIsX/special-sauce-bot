@@ -20,7 +20,7 @@ class DBLibrarian # aka "Alex"
   @db : DB::Database
 
   def initialize
-    @db = DB.open "sqlite3://./feathers.db"
+    @db = DB.open "sqlite3://./src/data/feathers.db"
   end
 
   # some bug here w 2 records.

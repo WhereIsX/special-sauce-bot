@@ -17,6 +17,7 @@
     - group channel point redemptions cooldown -> twitch api 
     - translate shit 
     - "want to become famous??"
+    - optinal argv for commands.json path at beginning of run 
 
 
 ### need a database(sqlite) for these

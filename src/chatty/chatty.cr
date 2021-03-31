@@ -1,5 +1,5 @@
 require "./command.cr"
-require "./other_constants.cr"
+require "./../data/other_constants"
 require "colorize"
 require "json"
 
@@ -9,11 +9,14 @@ class Chatty
   self.reload_static_commands
 
   def self.reload_static_commands : Bool
-    @@static_commands.merge! Hash(String, String).from_json(File.read("commands.json"))
+    @@static_commands.merge! Hash(String, String).from_json(File.read("./src/data/commands.json"))
     return true
   rescue shit_json : JSON::ParseException
     @@static_commands = Hash(String, String).new
     puts "🤬 shit json"
+    return false
+  rescue shit_path : File::NotFoundError
+    puts "🤬 shit path \n#{p! `pwd`}"
     return false
   end
 
@@ -23,7 +26,7 @@ class Chatty
                  knit_between_fibers : Channel(Following_Info))
     @bot_name = bot_name
     @channel_name = channel_name
-    @knit_between_fibers = knit_between_fiber
+    @knit_between_fibers = knit_between_fibers
     tcp_sock = TCPSocket.new("irc.chat.twitch.tv", 6697)
     @client = OpenSSL::SSL::Socket::Client.new(tcp_sock)
 

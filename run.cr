@@ -3,11 +3,8 @@
 # a git commit's what i'm thinking of,
 # you wouldn't get this from any other lib you tried
 
-require "./dblibrarian.cr"
-require "./chatty.cr"
-require "./servy.cr"
-require "socket"
-require "openssl"
+require "./src/chatty/chatty.cr"
+require "./src/servy/servy.cr"
 
 alias Following_Info = NamedTuple(broadcaster: String, user: String)
 # alias TwitchEvent = NamedTuple(event_type: String, broadcaster: String, user: String)

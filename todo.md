@@ -1,11 +1,25 @@
 # TODO
-    - in the middle of moving files around + `require`s 
-    - fix ping thing: no longer puts when pinged by twitch 
+    - steps to deply on gcp
+        1. modify `special-sauce-bot`: 
+            - path 
+                - ENV 
+                - optional run args
+            - remove tunneling pagekite service 
+        1.5 move `last_leaked` (!leaked and !damn commands)
+            - to sqlite3
+        2. on vm: 
+            - git `special-sauce-bot`
+            - git twitch-cli 
+            - set up ENV variables 
+        3. get certificate for our domain 
+            so that twitch will hit us up
+        4. celebrate! 
+        5. make the rest of the features 👇
+
     - !pond_points :>  
     - !counter_start <name> 
     - !++ <counter_name>
     - !-- <counter_name> 
-    - yak shaving counter 
     - tests 
     - supercows should be a table :D 
     - whoami? --> all record holders get to see their own record

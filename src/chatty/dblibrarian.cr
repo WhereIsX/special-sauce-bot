@@ -56,7 +56,21 @@ class DBLibrarian # aka "Alex"
     p! @db.exec(query, update, username)
   end
 
+  def create_new_leak : Bool
+    query = "INSERT INTO leaks (created_at) VALUES (#{Time.utc.to_rfc2822})"
+    result = @db.exec(query)
+    return result.rows_affected == 1
+  end
+
+  def get_last_leak : String | Nil
+    query = "SELECT created_at FROM leaks ORDER BY id DESC LIMIT 1"
+    return @db.query_one?(query: query, as: String)
+  end
+
   def goodbye
     @db.close
   end
 end
+
+# l = DBLibrarian.new
+# p! l.get_last_leak

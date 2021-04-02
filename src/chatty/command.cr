@@ -72,10 +72,11 @@ module Commands
   # 4'5 chad yana
   def self.cmd_damn(username : String, duckie_args : String)
     if SUPER_COWS.includes?(username)
-      File.open("last_leaked", "a") do |f| # time.to_rfc2822(file_location)
-        f.puts "#{Time.utc.to_rfc2822}"
+      if LIBRARIAN.create_new_leak
+        return "you get a new key! you get a new key! EVERYBODY GETS A NEW KEY!!"
+      else
+        return "create_new_leak is busted :( "
       end
-      return "you get a new key! you get a new key! EVERYBODY GETS A NEW KEY!!"
     else
       return "not authorized to record a new !leaked keys time"
     end
@@ -109,7 +110,10 @@ module Commands
   end
 
   def self.cmd_leaked(username : String, duckie_args : String)
-    last_leaked = Time.parse_rfc2822(File.read("last_leaked").split("\n")[-2])
+    leak_record = LIBRARIAN.get_last_leak
+    return "there were no leaks 🙃" if leak_record.nil?
+
+    last_leaked = Time.parse_rfc2822(leak_record)
     span = Time.utc - last_leaked
 
     if span > 1.days

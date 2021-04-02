@@ -1,0 +1,7 @@
+CREATE TABLE IF NOT EXISTS leaks (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    created_at TEXT 
+); 
+
+
+INSERT INTO leaks (created_at) VALUES ("Fri, 12 Mar 2021 02:13:42 +0000");

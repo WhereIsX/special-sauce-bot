@@ -11,5 +11,6 @@
     "!sauce" : "https://github.com/WhereIsX/special-sauce-bot",
     "!shave" : "https://www.youtube.com/watch?v=AbSehcT19u0", 
     "!testing" : "stuff",
-    "!vim" : "https://www.reddit.com/r/ProgrammerHumor/comments/aj1btq/vim_will_cut_your_security_budget_think_about_it/"
+    "!vim" : "https://www.reddit.com/r/ProgrammerHumor/comments/aj1btq/vim_will_cut_your_security_budget_think_about_it/",
+    "!yak?" : "is when I go off topic. see !shave"
 }

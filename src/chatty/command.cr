@@ -17,6 +17,8 @@ DYNAMIC_COMMANDS = {
   "!start_record" => ->Commands.cmd_create_duckie(String, String),
   "!burn_record"  => ->Commands.cmd_delete_duckie(String, String),
   "!consent"      => ->Commands.cmd_consent(String, String),
+  "!yak_count"    => ->Commands.cmd_naked_yaks_this_stream(String, String),
+  "!yak++"        => ->Commands.cmd_yak_inc(String, String),
 }
 
 SUPER_COWS = Set{
@@ -151,6 +153,29 @@ module Commands
       return "HYDRATE #{duckie_args}! go get your feathers wet :>"
     else
       return "they didn't give us consent to water them :<"
+    end
+  end
+
+  def self.cmd_yak_inc(username : String, duckie_args : String)
+    File.open("yak_counter", "a") do |f|
+      f.puts Time.utc.to_rfc2822 + "<#{username}>"
+    end
+    return "wow. another yak? *yawn*"
+  end
+
+  def self.cmd_naked_yaks_this_stream(username : String, duckie_args : String)
+    yaks = File.read("yak_counter")
+    time_collection = yaks.split("\n", remove_empty: true).map do |line|
+      # p! line.split('<').first
+      Time.parse_rfc2822(line.split('<').first)
+    end
+    oldest_yak = time_collection.bsearch_index do |yak_time|
+      12.hours.ago < yak_time
+    end
+    if oldest_yak
+      return (time_collection.size - oldest_yak).to_s
+    else
+      return "all the yaks are fully woolly; here're some Shears have a nice day!"
     end
   end
 

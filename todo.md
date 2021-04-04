@@ -15,7 +15,15 @@
             so that twitch will hit us up
         4. celebrate! 
         5. make the rest of the features 👇
-
+    - start delegating to an actual ORM instead of hackshacking our way around a fake ORM that eats up our time and makes us learn SQL for no good reason and we can't even flipping think straight anymore.
+    - actually make the yak table and decide on a good-enough start (which columns)
+    - decide on what to keep from twitch chat logs and how we should inform our viewers that this is being kept. (#consent_is_sexy) 
+        - instead of returning PONG facts, one of the things we can return is the reminder that chat is logged 
+            - worried that viewers will restrict speech / self censor and make this a sad space :(
+    - stop delegating to twitch-cli
+        => make our own APIcalls 
+    - change table name duckies -> ducky (singular)
+    - clean up .sql files
     - !pond_points :>  
     - !counter_start <name> 
     - !++ <counter_name>

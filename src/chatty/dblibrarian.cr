@@ -67,6 +67,35 @@ class DBLibrarian # aka "Alex"
     return @db.query_one?(query: query, as: String)
   end
 
+  def create_yak_counter : Bool
+    datetime = Time.utc.to_rfc2822
+    query = "INSERT INTO yak (created_at) VALUES (#{datetime})"
+    result = @db.exec(query)
+    return result.rows_affected == 1
+  end
+
+  def get_latest_yak
+    query = "SELECT * FROM yak ORDER BY id DESC LIMIT 1"
+    @db.query_one?(query: query, as: {
+      id:         Int32,
+      counter:    Int32,
+      created_at: String,
+      updated_at: String,
+    })
+  end
+
+  def increment_yak_counter : Bool
+    query = "UPDATE yak SET counter = counter + 1"
+    result = @db.exec(query)
+    return result.rows_affected == 1
+  end
+
+  def reset_yak_counter : Bool
+    query = "UPDATE yak SET counter = 0"
+    result = @db.exec(query)
+    return result.rows_affected == 1
+  end
+
   def goodbye
     @db.close
   end

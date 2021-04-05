@@ -160,7 +160,7 @@ module Commands
     File.open("yak_counter", "a") do |f|
       f.puts Time.utc.to_rfc2822 + "<#{username}>"
     end
-    return "wow. another yak? *yawn*"
+    return YAK_INC_RESP.sample
   end
 
   def self.cmd_naked_yaks_this_stream(username : String, duckie_args : String)

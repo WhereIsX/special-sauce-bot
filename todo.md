@@ -42,6 +42,13 @@
     - optinal argv for commands.json path at beginning of run 
 
 
+### PROJECTS ROADMAP
+    - get to a "good enough" point with chatbot
+    - duck pond 3js project 
+    - TUI go + bubbletea + lipgloss
+    - blog pawject
+    - make follow/subscribble emotes and badges
+
 ### need a database(sqlite) for these
 choose duck-sona (Aylesbury Duck) -> animate these! in duck pond(js)
 when duckies use our emotes, we give them points?!

@@ -8,6 +8,12 @@ PONG_FACTS = [
   ":ping_pong: https://en.wikipedia.org/wiki/Pong#/media/File:Signed_Pong_Cabinet.jpg",
 ]
 
+YAK_INC_RESP = [
+  "wow another yak",
+  "do you really need more wool?",
+  "that's the nth yak today!",
+]
+
 TWITCH_MOD_COMMANDS = [
   "/ban",
   "/clear",

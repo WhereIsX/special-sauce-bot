@@ -6,6 +6,3 @@ dependencies:
     github: amberframework/granite
   sqlite3:
     github: crystal-lang/crystal-sqlite3
-  jennifer:
-    github: imdrasil/jennifer.cr
-    version: "~> 0.10.0"

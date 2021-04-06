@@ -8,10 +8,21 @@ PONG_FACTS = [
   ":ping_pong: https://en.wikipedia.org/wiki/Pong#/media/File:Signed_Pong_Cabinet.jpg",
 ]
 
+HELPFUL_HINTS = [
+  "want to be part of the flock? try !start_record and !consent",
+
+]
+
+QUOTES = [
+  "feature; not a bug; sweep it unda tha rug",
+  "audacious mispellings are for rappers ONLY. coders should aspire to spell correctly for ctrl+f. f to pay respects right meow.",
+]
+
 YAK_INC_RESP = [
   "wow another yak",
   "do you really need more wool?",
   "that's the nth yak today!",
+  "what were you doing again?",
 ]
 
 TWITCH_MOD_COMMANDS = [

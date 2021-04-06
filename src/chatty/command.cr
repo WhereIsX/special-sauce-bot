@@ -9,6 +9,7 @@ DYNAMIC_COMMANDS = {
   "!echo"     => ->Commands.cmd_echo(String, String),
   "!leaked"   => ->Commands.cmd_leaked(String, String),
   "!ping"     => ->Commands.cmd_ping(String, String),
+  "!quote"    => ->Commands.cmd_quote(String, String),
   "!so"       => ->Commands.cmd_shoutout(String, String),
   "!water"    => ->Commands.cmd_water(String, String),
   # "!uptime" => ->Commands.cmd_uptime(String, String),
@@ -129,6 +130,10 @@ module Commands
 
   def self.cmd_ping(username : String, duckie_args : String)
     return PONG_FACTS.sample
+  end
+
+  def self.cmd_quote(username : String, duckie_args : String)
+    return QUOTES.sample
   end
 
   def self.cmd_shoutout(username : String, duckie_args : String)

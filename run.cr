@@ -5,6 +5,12 @@
 
 require "./src/chatty/chatty.cr"
 require "./src/servy/servy.cr"
+require "granite/adapter/sqlite"
+
+Granite::Connections << Granite::Adapter::Sqlite.new(
+  name: "library",
+  url: "sqlite3://./src/data/feathers.db"
+)
 
 alias Following_Info = NamedTuple(broadcaster: String, user: String)
 # alias TwitchEvent = NamedTuple(event_type: String, broadcaster: String, user: String)

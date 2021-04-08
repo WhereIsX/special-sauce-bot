@@ -21,7 +21,6 @@ QUOTES = [
 YAK_INC_RESP = [
   "wow another yak",
   "do you really need more wool?",
-  "that's the nth yak today!",
   "what were you doing again?",
 ]
 

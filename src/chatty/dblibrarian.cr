@@ -9,7 +9,7 @@ require "sqlite3"
 alias Duckie = NamedTuple(
   # id: Int32,
   username: String,
-  points: Int32,
+  points: Int64,
   water_consent: Bool,
   at_me_consent: Bool,
 )
@@ -34,7 +34,7 @@ class DBLibrarian # aka "Alex"
 
     return @db.query_one?(query, username, as: {
       username:      String,
-      points:        Int32,
+      points:        Int64,
       water_consent: Bool,
       at_me_consent: Bool,
     })
@@ -65,6 +65,12 @@ class DBLibrarian # aka "Alex"
   def get_last_leak : String | Nil
     query = "SELECT created_at FROM leaks ORDER BY id DESC LIMIT 1"
     return @db.query_one?(query: query, as: String)
+  end
+
+  def update_points(duckie : String, n : Int32) : Bool
+    query = "UPDATE duckies SET points = points + ? WHERE username = ?"
+    result = @db.exec(query, n, duckie)
+    return result.rows_affected == 1
   end
 
   def create_yak_counter : Bool

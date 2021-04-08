@@ -7,6 +7,7 @@ DYNAMIC_COMMANDS = {
   "!commands" => ->Commands.cmd_help(String, String),
   "!damn"     => ->Commands.cmd_damn(String, String),
   "!echo"     => ->Commands.cmd_echo(String, String),
+  "!feed"     => ->Commands.cmd_feed(String, String),
   "!leaked"   => ->Commands.cmd_leaked(String, String),
   "!ping"     => ->Commands.cmd_ping(String, String),
   "!quote"    => ->Commands.cmd_quote(String, String),
@@ -18,12 +19,12 @@ DYNAMIC_COMMANDS = {
   "!start_record" => ->Commands.cmd_create_duckie(String, String),
   "!burn_record"  => ->Commands.cmd_delete_duckie(String, String),
   "!consent"      => ->Commands.cmd_consent(String, String),
-  "!yak_count"    => ->Commands.cmd_naked_yaks_this_stream(String, String),
+  "!yak_count"    => ->Commands.cmd_yak_count(String, String),
   "!yak++"        => ->Commands.cmd_yak_inc(String, String),
 }
 
 SUPER_COWS = Set{
-  "where_is_x", "muumijumala", "somethingaboutus", "zockle", "steve7411", "tanerax", "aigle_pt",
+  "where_is_x", "anthonywritescode", "muumijumala", "somethingaboutus", "zklown", "zockle", "steve7411", "tanerax", "aigle_pt",
 }
 
 module Commands
@@ -109,7 +110,26 @@ module Commands
   end
 
   def self.cmd_feed(username : String, duckie_args : String)
-    return ":>" # sqlite db
+    if !SUPER_COWS.includes?(username)
+      return "*squint* you dont look like a super cow.. are you sure you have SUDO cow powers?"
+    end
+
+    prePoints, duckie = duckie_args.split(' ', remove_empty: true)
+    points = prePoints.to_i { 0 } # try* to parse to int, if not default to 0
+
+    if points == 0
+      return "you wat"
+    elsif points.abs > 1000
+      return "too much feed"
+    elsif LIBRARIAN.update_points(duckie, points)
+      duckie_record = LIBRARIAN.get_duckie(duckie)
+      if duckie_record
+        return "#{duckie} now has #{duckie_record[:points]} peas!"
+      else # if LIBRARIAN#update_points worked but couldn't LIBRARIAN#get_duckie dun dun dunnnnnn.
+        return "LIBRARIAN did update the points, but we couldn't find their record"
+      end
+    end
+    return "how tf did we get to line 130"
   end
 
   def self.cmd_leaked(username : String, duckie_args : String)
@@ -153,7 +173,7 @@ module Commands
     # write to file for list of ducks for whom we have consent
     duckie = LIBRARIAN.get_duckie(duckie_args.downcase)
     if duckie.nil?
-      return "no such duckie"
+      return "no such duckie, have they `!start_record` yet?"
     elsif duckie[:water_consent]
       return "HYDRATE #{duckie_args}! go get your feathers wet :>"
     else
@@ -165,10 +185,12 @@ module Commands
     File.open("yak_counter", "a") do |f|
       f.puts Time.utc.to_rfc2822 + "<#{username}>"
     end
-    return YAK_INC_RESP.sample
+    yaks_shaved = self.cmd_yak_count("", "")
+
+    return "that's #{yaks_shaved} now! " + YAK_INC_RESP.sample
   end
 
-  def self.cmd_naked_yaks_this_stream(username : String, duckie_args : String)
+  def self.cmd_yak_count(username : String, duckie_args : String)
     yaks = File.read("yak_counter")
     time_collection = yaks.split("\n", remove_empty: true).map do |line|
       # p! line.split('<').first

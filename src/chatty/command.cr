@@ -42,31 +42,33 @@ module Commands
     Give
   end
 
-  enum Consents
-    Water
-    AtMe # TB deprecated
-  end
-
+  # usename: !consent <give/revoke>
+  #                   ^duckie_args^
   def self.cmd_consent(username : String, duckie_args : String) : String
-    parsed_args = duckie_args.split(" ", 2)
-    update = Update.parse?(parsed_args.first)
-    consent = Consents.parse?(parsed_args.last.delete(' '))
-    return "try !consent <give/revoke> <at me/water>" if update.nil? || consent.nil?
-    if LIBRARIAN.get_duckie(username).nil? # Duckie | Nil
+    update = Update.parse?(duckie_args)
+    ducky = Ducky.find_by(username: username)
+
+    if ducky.nil?
       return "sorry, we couldn't find you. have you already `!start_record` ?"
     end
-    case consent
-    in Consents::Water
-      LIBRARIAN.water_consent(username, update.value)
-      return "okay"
-    in Consents::AtMe
-      LIBRARIAN.at_me_consent(username, update.value)
-      return "okay"
+
+    case update
+    in Nil
+      return "try !consent <give/revoke>"
+    in Update::Revoke
+      ducky.at_me_consent = false
+    in Update::Give
+      ducky.at_me_consent = true
+    end
+    if ducky.save
+      return "aye aye!"
+    else
+      return "that failed :( time to git blame/annotate where_is_x"
     end
   end
 
   def self.cmd_create_duckie(username : String, duckie_args : String)
-    if LIBRARIAN.create_duckie(username)
+    if Ducky.create(username: username)
       return "welcome to the flock!"
     else
       return "we couldn't start a record for you. you might already have one Waaat"
@@ -92,8 +94,13 @@ module Commands
       return "who're you trying to delete? try !burn_record #{username}"
     end
     # below this line, keep in mind that username == duckie_args
-    if LIBRARIAN.delete_duckie(username)
-      return "burnt to a crisp!"
+    if ducky = Ducky.find_by(username: username)
+      ducky.destroy
+      if ducky.destroyed?
+        return "burnt to a crisp!"
+      else
+        return "we found your record but couldn't destroy it..?"
+      end
     else
       return "wat. you don't have a record"
     end
@@ -109,27 +116,29 @@ module Commands
     end
   end
 
-  def self.cmd_feed(username : String, duckie_args : String)
-    if !SUPER_COWS.includes?(username)
+  def self.cmd_feed(caller_name : String, args : String)
+    if !SUPER_COWS.includes?(caller_name)
       return "*squint* you dont look like a super cow.. are you sure you have SUDO cow powers?"
     end
 
-    prePoints, duckie = duckie_args.split(' ', remove_empty: true)
+    prePoints, ducky_name = args.split(' ', remove_empty: true)
     points = prePoints.to_i { 0 } # try* to parse to int, if not default to 0
+    ducky = Ducky.find_by(username: ducky_name)
 
-    if points == 0
-      return "you wat"
+    if ducky.nil?
+      return "oye! #{caller_name}, ya can't spell! who tf is #{ducky_name}?"
+    elsif points.zero?
+      return "thats either an invalid number, or something something"
     elsif points.abs > 1000
       return "too much feed"
-    elsif LIBRARIAN.update_points(duckie, points)
-      duckie_record = LIBRARIAN.get_duckie(duckie)
-      if duckie_record
-        return "#{duckie} now has #{duckie_record[:points]} peas!"
-      else # if LIBRARIAN#update_points worked but couldn't LIBRARIAN#get_duckie dun dun dunnnnnn.
-        return "LIBRARIAN did update the points, but we couldn't find their record"
+    else
+      ducky.points += points
+      if ducky.save
+        return "#{ducky_name} now has #{ducky.points}"
+      else
+        return "wat"
       end
     end
-    return "how tf did we get to line 130"
   end
 
   def self.cmd_leaked(username : String, duckie_args : String)

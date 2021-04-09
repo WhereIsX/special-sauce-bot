@@ -177,14 +177,14 @@ module Commands
     end
   end
 
-  def self.cmd_water(username : String, duckie_args : String)
+  def self.cmd_water(caller_name : String, args : String)
     # randomly picks a duck and tags them, asking them to drink
     # write to file for list of ducks for whom we have consent
-    duckie = LIBRARIAN.get_duckie(duckie_args.downcase)
+    duckie = Ducky.find_by(username: args)
     if duckie.nil?
       return "no such duckie, have they `!start_record` yet?"
-    elsif duckie[:water_consent]
-      return "HYDRATE #{duckie_args}! go get your feathers wet :>"
+    elsif duckie.at_me_consent
+      return "HYDRATE #{args}! go get your feathers wet :>"
     else
       return "they didn't give us consent to water them :<"
     end

@@ -1,16 +1,12 @@
-require "granite/adapter/sqlite"
-
-Granite::Connections << Granite::Adapter::Sqlite.new(
-  name: "sqlite",
-  url: "sqlite3://./src/data/feathers.db"
-)
+require "./../../config/db.cr"
 
 class Ducky < Granite::Base
   connection sqlite
-  table duckies # Name of the table to use for the model, defaults to class name snake cased
+  table ducky # Name of the table to use for the model, defaults to class name snake cased
 
   column id : Int32, primary: true # Primary key, defaults to AUTO INCREMENT
   column username : String
   column points : Int64 = 0
-  column at_me_consent : Bool = false
+  column at_me_consent : Bool = true
+  column super_cow_power : Bool = false
 end

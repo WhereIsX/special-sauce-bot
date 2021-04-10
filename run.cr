@@ -2,10 +2,8 @@
 # you know the rules and so do i.
 # a git commit's what i'm thinking of,
 # you wouldn't get this from any other lib you tried
-
 require "./src/chatty/chatty.cr"
 require "./src/servy/servy.cr"
-require "granite/adapter/sqlite"
 
 alias Following_Info = NamedTuple(broadcaster: String, user: String)
 # alias TwitchEvent = NamedTuple(event_type: String, broadcaster: String, user: String)

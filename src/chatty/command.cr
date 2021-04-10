@@ -68,17 +68,21 @@ module Commands
   end
 
   def self.cmd_create_duckie(username : String, duckie_args : String)
-    if Ducky.create(username: username)
+    d = Ducky.create(username: username)
+    if d.errors.empty?
       return "welcome to the flock!"
-    else
+    else # we hit some kinda error... :/
       return "we couldn't start a record for you. you might already have one Waaat"
     end
   end
 
-  # 4'5 chad yana
-  def self.cmd_damn(username : String, duckie_args : String)
-    if SUPER_COWS.includes?(username)
-      if LIBRARIAN.create_new_leak
+  # 4'5 duck
+  def self.cmd_damn(caller_name : String, args : String)
+    # we dont want just any regular user calling this method (prevent abuse!)
+    d = Ducky.find_by(username: caller_name) # Ducky | Nil
+    if d && d.super_cow_power                # is the caller a super_cow?
+      leak = Leak.new
+      if leak.save
         return "you get a new key! you get a new key! EVERYBODY GETS A NEW KEY!!"
       else
         return "create_new_leak is busted :( "
@@ -126,7 +130,7 @@ module Commands
     ducky = Ducky.find_by(username: ducky_name)
 
     if ducky.nil?
-      return "oye! #{caller_name}, ya can't spell! who tf is #{ducky_name}?"
+      return "oye! #{caller_name} we don't have a #{ducky_name} in our records. have they !start_record ?"
     elsif points.zero?
       return "thats either an invalid number, or something something"
     elsif points.abs > 1000
@@ -141,13 +145,11 @@ module Commands
     end
   end
 
-  def self.cmd_leaked(username : String, duckie_args : String)
-    leak_record = LIBRARIAN.get_last_leak
+  def self.cmd_leaked(username : String, duckie_args : String) : String
+    leak_record = Leak.all.last
+
     return "there were no leaks 🙃" if leak_record.nil?
-
-    last_leaked = Time.parse_rfc2822(leak_record)
-    span = Time.utc - last_leaked
-
+    span = Time.utc - leak_record.created_at
     if span > 1.days
       return "#{span.days} days since we last ducked up"
     elsif span > 1.hours
@@ -155,6 +157,7 @@ module Commands
     else
       return "#{span.minutes} minutes since we last ducked up"
     end
+    return "heyyo"
   end
 
   def self.cmd_ping(username : String, duckie_args : String)
@@ -178,8 +181,7 @@ module Commands
   end
 
   def self.cmd_water(caller_name : String, args : String)
-    # randomly picks a duck and tags them, asking them to drink
-    # write to file for list of ducks for whom we have consent
+    # TBD: randomly picks a duck and tags them, asking them to drink
     duckie = Ducky.find_by(username: args)
     if duckie.nil?
       return "no such duckie, have they `!start_record` yet?"

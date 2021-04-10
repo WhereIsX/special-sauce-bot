@@ -1,6 +1,7 @@
 require "./command.cr"
-require "./../data/other_constants"
+require "./../data/other_constants.cr"
 require "./../models/ducky.cr"
+require "./../models/leak.cr"
 require "colorize"
 require "json"
 

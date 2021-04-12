@@ -36,7 +36,6 @@ while chatty.listening && (yana_says = gets)
     # Process.signal(signal: Signal::INT, pid: 0)
     chatty.goodbye
     servy.goodbye
-    Commands::LIBRARIAN.goodbye
   else
     chatty.say(yana_says)
   end

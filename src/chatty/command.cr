@@ -1,5 +1,3 @@
-require "./dblibrarian.cr"
-
 # sorted alphabetically by value (proc name) and then by key (command string)
 
 DYNAMIC_COMMANDS = {
@@ -28,9 +26,6 @@ SUPER_COWS = Set{
 }
 
 module Commands
-  # datamaster
-  LIBRARIAN = DBLibrarian.new
-
   def self.cmd_help(username : String, duckie_args : String)
     intro_bit = "the commands are: "
     keys_bit = DYNAMIC_COMMANDS.keys.sort.join(" | ")

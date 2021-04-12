@@ -1,6 +1,0 @@
-CREATE TABLE IF NOT EXISTS yak (
-    id INTEGER PRIMARY KEY AUTOINCREMENT,
-    counter INTEGER DEFAULT 0, 
-    created_at TEXT NOT NULL ,
-    updated_at TEXT NOT NULL
-);

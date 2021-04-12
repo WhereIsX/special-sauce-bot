@@ -122,7 +122,7 @@ module Commands
 
     prePoints, ducky_name = args.split(' ', remove_empty: true)
     points = prePoints.to_i { 0 } # try* to parse to int, if not default to 0
-    ducky = Ducky.find_by(username: ducky_name)
+    ducky = Ducky.find_by(username: ducky_name.downcase)
 
     if ducky.nil?
       return "oye! #{caller_name} we don't have a #{ducky_name} in our records. have they !start_record ?"

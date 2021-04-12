@@ -26,7 +26,7 @@ SUPER_COWS = Set{
 }
 
 module Commands
-  def self.cmd_help(username : String, duckie_args : String)
+  def self.cmd_help(caller_name : String, duckie_args : String)
     intro_bit = "the commands are: "
     keys_bit = DYNAMIC_COMMANDS.keys.sort.join(" | ")
     return intro_bit + keys_bit
@@ -39,9 +39,9 @@ module Commands
 
   # usename: !consent <give/revoke>
   #                   ^duckie_args^
-  def self.cmd_consent(username : String, duckie_args : String) : String
+  def self.cmd_consent(caller_name : String, duckie_args : String) : String
     update = Update.parse?(duckie_args)
-    ducky = Ducky.find_by(username: username)
+    ducky = Ducky.find_by(username: caller_name)
 
     if ducky.nil?
       return "sorry, we couldn't find you. have you already `!start_record` ?"
@@ -62,8 +62,8 @@ module Commands
     end
   end
 
-  def self.cmd_create_duckie(username : String, duckie_args : String)
-    d = Ducky.create(username: username)
+  def self.cmd_create_duckie(caller_name : String, duckie_args : String)
+    d = Ducky.create(username: caller_name)
     if d.errors.empty?
       return "welcome to the flock!"
     else # we hit some kinda error... :/
@@ -87,13 +87,13 @@ module Commands
     end
   end
 
-  def self.cmd_delete_duckie(username : String, duckie_args : String)
-    # !burn_record <username>
-    if username != duckie_args.downcase
-      return "who're you trying to delete? try !burn_record #{username}"
+  def self.cmd_delete_duckie(caller_name : String, duckie_args : String)
+    # !burn_record <caller_name>
+    if caller_name != duckie_args.downcase
+      return "who're you trying to delete? try !burn_record #{caller_name}"
     end
-    # below this line, keep in mind that username == duckie_args
-    if ducky = Ducky.find_by(username: username)
+    # below this line, keep in mind that caller_name == duckie_args
+    if ducky = Ducky.find_by(username: caller_name)
       ducky.destroy
       if ducky.destroyed?
         return "burnt to a crisp!"
@@ -105,7 +105,7 @@ module Commands
     end
   end
 
-  def self.cmd_echo(username : String, duckie_args : String)
+  def self.cmd_echo(caller_name : String, duckie_args : String)
     if duckie_args.empty?
       return "actually, it's !echo <duckie_args you want me to say>"
     elsif duckie_args[0] == '/' || duckie_args[0] == '.' # super secure
@@ -140,7 +140,7 @@ module Commands
     end
   end
 
-  def self.cmd_leaked(username : String, duckie_args : String) : String
+  def self.cmd_leaked(caller_name : String, duckie_args : String) : String
     leak_record = Leak.all.last
 
     return "there were no leaks 🙃" if leak_record.nil?
@@ -155,16 +155,16 @@ module Commands
     return "heyyo"
   end
 
-  def self.cmd_ping(username : String, duckie_args : String)
+  def self.cmd_ping(caller_name : String, duckie_args : String)
     return PONG_FACTS.sample
   end
 
-  def self.cmd_quote(username : String, duckie_args : String)
+  def self.cmd_quote(caller_name : String, duckie_args : String)
     return QUOTES.sample
   end
 
-  def self.cmd_shoutout(username : String, duckie_args : String)
-    return "nice try, 👅" if !valid_username?(duckie_args)
+  def self.cmd_shoutout(caller_name : String, duckie_args : String)
+    return "nice try, 👅" if !valid_caller_name?(duckie_args)
     search_result = `twitch api get search/channels?query=#{duckie_args}`
     data = JSON.parse(search_result).dig("data") # => JSON::Any
     user = data.as_a.find { |user| user["display_name"].to_s.downcase == duckie_args.downcase }
@@ -187,16 +187,16 @@ module Commands
     end
   end
 
-  def self.cmd_yak_inc(username : String, duckie_args : String)
+  def self.cmd_yak_inc(caller_name : String, duckie_args : String)
     File.open("yak_counter", "a") do |f|
-      f.puts Time.utc.to_rfc2822 + "<#{username}>"
+      f.puts Time.utc.to_rfc2822 + "<#{caller_name}>"
     end
     yaks_shaved = self.cmd_yak_count("", "")
 
     return "that's #{yaks_shaved} now! " + YAK_INC_RESP.sample
   end
 
-  def self.cmd_yak_count(username : String, duckie_args : String)
+  def self.cmd_yak_count(caller_name : String, duckie_args : String)
     yaks = File.read("yak_counter")
     time_collection = yaks.split("\n", remove_empty: true).map do |line|
       # p! line.split('<').first
@@ -212,8 +212,8 @@ module Commands
     end
   end
 
-  # does username try to escape and call more duckie_args in our terminal?!
-  def self.valid_username?(username : String)
-    /^[A-Za-z0-9_]{4,25}$/.matches?(username)
+  # does caller_name try to escape and call more duckie_args in our terminal?!
+  def self.valid_caller_name?(caller_name : String)
+    /^[A-Za-z0-9_]{4,25}$/.matches?(caller_name)
   end
 end

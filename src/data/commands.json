@@ -20,5 +20,6 @@
     "!vim" : "https://www.reddit.com/r/ProgrammerHumor/comments/aj1btq/vim_will_cut_your_security_budget_think_about_it/",
     "!vscext" : "active power mode! (best on atom but also available for vscode, jetbrains ide and probably more!) https://www.youtube.com/watch?v=Jg5aZxWmsnw&t=49s",
     "!wat" : "tired of writing SQL => using Granite, a ORM for crystal",
+    "!whycrystal" : "+ ruby, but compiled! w type inferencing on steroids, nil checks + nice people (rubyists), + concurrency model of Go... ->TLDR: because its shiny",
     "!yak?" : "is when I go off topic. see !shave"
 }

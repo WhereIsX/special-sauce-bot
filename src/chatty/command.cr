@@ -121,11 +121,13 @@ module Commands
     end
 
     prePoints, ducky_name = args.split(' ', remove_empty: true)
+    p! ducky_name
     points = prePoints.to_i { 0 } # try* to parse to int, if not default to 0
-    ducky = Ducky.find_by(username: ducky_name)
+    ducky = Ducky.find_by(username: ducky_name.downcase)
 
     if ducky.nil?
-      return "oye! #{caller_name} we don't have a #{ducky_name} in our records. have they !start_record ?"
+      # maybe we should make them a record, WITHOUT their consent??
+      return "oye! #{caller_name} we don't have a #{ducky_name} in our records. if they would like to receive the feed, they should !start_record ?"
     elsif points.zero?
       return "thats either an invalid number, or something something"
     elsif points.abs > 1000
@@ -133,7 +135,7 @@ module Commands
     else
       ducky.points += points
       if ducky.save
-        return "#{ducky_name} now has #{ducky.points}"
+        return "#{ducky_name} now has #{ducky.points} peas"
       else
         return "wat"
       end
@@ -177,7 +179,7 @@ module Commands
 
   def self.cmd_water(caller_name : String, args : String)
     # TBD: randomly picks a duck and tags them, asking them to drink
-    duckie = Ducky.find_by(username: args)
+    duckie = Ducky.find_by(username: args.downcase)
     if duckie.nil?
       return "no such duckie, have they `!start_record` yet?"
     elsif duckie.at_me_consent

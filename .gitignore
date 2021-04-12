@@ -3,3 +3,5 @@ run
 lib/
 binaries/
 src/data/copypastas
+licenses/
+config/

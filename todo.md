@@ -12,14 +12,15 @@
         - git twitch-cli 
         - set up ENV variables 
     3. get certificate for our domain 
-        so that twitch will hit us up
+        - get caddy? 
+    3.5 set up `twitch` cli on google server  
     4. celebrate! 
     5. make the rest of the features 👇
 
 ### PRIORITY 0 
     - use granite!
         - make model 
-            - manual test that we can use the model first 
+            - manual test that we can use the model first :w
             - validations 
         - no more dblibrarian
             - make dynamic commands use new models 
@@ -27,6 +28,7 @@
         - clean up .sql files
     - does it compile?
     - ^ step 3: get certificate for website 
+        - use caddy 
     - make own api calls
         - currently using command literal ("shelling out") `twitch api get` 
         - !so command depends on this
@@ -42,8 +44,26 @@
     - give duckies titles!!! (table duckies column title)
         - also column ducksona 
     - whoami? --> all record holders get to see their own record
+    - commands to be case insensitive 
+#### TBD COMMANDS
+    - !peas
+        - returns the peas that a ducky has accumulated 
+    - !feast <amount> <time_duration>
+        - feed amount to all duckies who chatted in the last time_duration 
+    - !stimulus_peas <amount>
+        - feed amount to ALL duckies in record 
+    - !trade_peas <reward>
+        - but what rewards can we give the duckies??
+    - !feedme <amount>
+        - request to be fed <amount>
+        - stored in a queue for yana to say approve/reject (y/n)
+            - persisted on a table??
+    - !gamble <amount/"all">
+        - RNG? 
+        - a duckie mentions that gambling is not allowed in many countries 
+    - how to convert channel points (NANDs) -> peas 
+
 ### PRIORITY none aka never getting done  
-    - change table name duckies -> ducky (singular)
     - make more emojis, subscribble badges 
     - say hi to new duckies! 
         - [] subscribe to twitch API for subscribbles -

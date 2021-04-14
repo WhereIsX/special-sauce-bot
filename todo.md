@@ -7,7 +7,7 @@
         - remove tunneling pagekite service 
     1.5 move `last_leaked` (!leaked and !damn commands)
         - to sqlite3
-    2. on vm: 
+    2. on vm
         - git `special-sauce-bot`
         - git twitch-cli 
         - set up ENV variables 

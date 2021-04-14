@@ -17,8 +17,10 @@ DYNAMIC_COMMANDS = {
   "!start_record" => ->Commands.cmd_create_duckie(String, String),
   "!burn_record"  => ->Commands.cmd_delete_duckie(String, String),
   "!consent"      => ->Commands.cmd_consent(String, String),
+
   "!yak_count"    => ->Commands.cmd_yak_count(String, String),
   "!yak++"        => ->Commands.cmd_yak_inc(String, String),
+  "!todayishaved" => ->Commands.cmd_yak_topics(String, String),
 }
 
 SUPER_COWS = Set{
@@ -76,7 +78,7 @@ module Commands
     # we dont want just any regular user calling this method (prevent abuse!)
     d = Ducky.find_by(username: caller_name) # Ducky | Nil
     if d && d.super_cow_power                # is the caller a super_cow?
-      leak = Leak.new
+      leak = Leak.new(created_at: Time.utc)
       if leak.save
         return "you get a new key! you get a new key! EVERYBODY GETS A NEW KEY!!"
       else
@@ -120,8 +122,11 @@ module Commands
       return "*squint* you dont look like a super cow.. are you sure you have SUDO cow powers?"
     end
 
-    prePoints, ducky_name = args.split(' ', remove_empty: true)
-    p! ducky_name
+    parsed_args = args.split(' ', remove_empty: true)
+    if parsed_args.size != 2
+      return "you wat. we expected 2 args."
+    end
+    prePoints, ducky_name = parsed_args
     points = prePoints.to_i { 0 } # try* to parse to int, if not default to 0
     ducky = Ducky.find_by(username: ducky_name.downcase)
 
@@ -143,7 +148,7 @@ module Commands
   end
 
   def self.cmd_leaked(caller_name : String, duckie_args : String) : String
-    leak_record = Leak.all.last
+    leak_record = Leak.order(created_at: :desc).limit(1).select.first
 
     return "there were no leaks 🙃" if leak_record.nil?
     span = Time.utc - leak_record.created_at
@@ -190,28 +195,39 @@ module Commands
   end
 
   def self.cmd_yak_inc(caller_name : String, duckie_args : String)
-    File.open("yak_counter", "a") do |f|
-      f.puts Time.utc.to_rfc2822 + "<#{caller_name}>"
+    yak = Yak.new(created_at: Time.utc)
+    if duckie_args
+      yak.topic = duckie_args
+    else
+      yak.topic = ""
     end
-    yaks_shaved = self.cmd_yak_count("", "")
-
-    return "that's #{yaks_shaved} now! " + YAK_INC_RESP.sample
+    if yak.save
+      yaks_shaved = self.cmd_yak_count("", "")
+      # passing in two empty strings because proc expects exact # of args,
+      # but isnt using them >_>;;
+      return "that's #{yaks_shaved} now! " + YAK_INC_RESP.sample
+    else
+      return "couldn't shave. Waaat"
+    end
   end
 
   def self.cmd_yak_count(caller_name : String, duckie_args : String)
-    yaks = File.read("yak_counter")
-    time_collection = yaks.split("\n", remove_empty: true).map do |line|
-      # p! line.split('<').first
-      Time.parse_rfc2822(line.split('<').first)
-    end
-    oldest_yak = time_collection.bsearch_index do |yak_time|
-      12.hours.ago < yak_time
-    end
-    if oldest_yak
-      return (time_collection.size - oldest_yak).to_s
+    yaks = Yak.where(:created_at, :gt, 12.hours.ago).select.size
+
+    if yaks.zero?
+      return "the yaks are woolly; here're some Shears have a nice day!"
     else
-      return "all the yaks are fully woolly; here're some Shears have a nice day!"
+      return yaks.to_s
     end
+  end
+
+  def self.cmd_yak_topics(caller_name : String, duckie_args : String)
+    yaks = Yak.where(:created_at, :gt, 12.hours.ago)
+      .where(:topic, :neq, "")
+      .select
+
+    topics = yaks.map { |yak| yak.topic }.join(", ")
+    return "today we shaved: #{topics}"
   end
 
   # does caller_name try to escape and call more duckie_args in our terminal?!

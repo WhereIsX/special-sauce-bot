@@ -4,3 +4,5 @@ lib/
 binaries/
 src/data/copypastas
 licenses/
+src/data/feathers.db
+.history/

@@ -9,4 +9,5 @@ class Ducky < Granite::Base
   column points : Int64 = 0
   column at_me_consent : Bool = true
   column super_cow_power : Bool = false
+  column created_at : Time = Time.utc
 end

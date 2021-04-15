@@ -36,6 +36,7 @@ class Chatty
     @client.puts("PASS #{token}")
     @client.puts("NICK #{bot_name}") # twitch doesn't seem to use this...
     @client.puts("JOIN ##{channel_name}")
+    @client.puts("CAP REQ :twitch.tv/tags")
     puts "I'm alive!"
     say("🌊 hi")
   end
@@ -48,20 +49,22 @@ class Chatty
   def listen
     @listening = true
     spawn do
-      while listening && (irc_message = @client.gets)
+      while listening && (raw_irc = @client.gets)
         now = Time.local.to_s("%H:%M")
-        if ping?(irc_message)
-          answer_ping(irc_message)
-        elsif captures = irc_message.match(/^:(?<username>.+)!.+ PRIVMSG #\w+ :(?<message>.+)$/)
-          username = captures["username"]
-          message = captures["message"]
-          respond(username, message)
+        if ping?(raw_irc)
+          answer_ping(raw_irc)
+        elsif is_user_message?(raw_irc)
+          stuff = parse_raw_channel_chatter(raw_irc)
+          tags, username, message = stuff[:tags], stuff[:username], stuff[:message]
+          if username && message
+            respond(username, message)
+          end
+          # Colorize.new(tags.color)
 
-          # db lookup of username
-          # if no usename => use hashing fn to deterministically get color
+          puts tags.colorize(:light_blue)
           puts "#{now} #{username}: #{message} ".colorize(:light_magenta)
         else
-          puts "#{now} #{irc_message}".colorize(:red)
+          puts "#{now} #{raw_irc}\n".colorize(:light_blue)
         end
       end
     end
@@ -71,6 +74,44 @@ class Chatty
         say("Waaat thanks for quackin' along #{following_event[:user]} Waaat")
       end
     end
+  end
+
+  private def parse_raw_channel_chatter(raw_irc : String) : NamedTuple(
+    tags: Hash(String, String),
+    username: String,
+    message: String)
+    raw_tags, rest = raw_irc.split(separator: ' ', limit: 2)
+    tags = Hash(String, String).new
+
+    raw_tags.split(';').each do |tag|
+      parsed_tag = tag.split('=')
+      next if parsed_tag.size != 2 || parsed_tag.last.empty?
+      # we can asume that we have a nonempty parsed tag
+      tag_name = parsed_tag.first
+      tag_value = parsed_tag.last
+      tags[tag_name] = tag_value
+    end
+    captures = rest.match(/^:(?<username>.+)!.+ PRIVMSG #\w+ :(?<message>.+)$/)
+    if captures
+      username = captures["username"]
+      message = captures["message"]
+    else
+      username = ""
+      message = ""
+    end
+    return {tags: tags, username: username, message: message}
+  end
+
+  def is_user_message?(raw_irc)
+    return raw_irc.includes? "PRIVMSG"
+  end
+
+  private def rbg_messages(username : String, message : String)
+
+    # a duckys color could be:
+    # - set by them on our db
+    # - set by them on twitch (tag)
+    # - determined by .hash
   end
 
   def respond(username : String, message : String)

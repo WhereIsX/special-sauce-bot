@@ -60,8 +60,9 @@ class Chatty
             respond(username, message)
           end
           # Colorize.new(tags.color)
-
-          puts tags.colorize(:light_blue)
+          if tags.has_key?("color")
+            puts tags["color"].colorize(:light_blue)
+          end
           puts "#{now} #{username}: #{message} ".colorize(:light_magenta)
         else
           puts "#{now} #{raw_irc}\n".colorize(:light_blue)

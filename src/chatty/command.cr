@@ -7,6 +7,7 @@ DYNAMIC_COMMANDS = {
   "!echo"     => ->Commands.cmd_echo(String, String),
   "!feed"     => ->Commands.cmd_feed(String, String),
   "!leaked"   => ->Commands.cmd_leaked(String, String),
+  "!my_peas"  => ->Commands.cmd_peas(String, String),
   "!ping"     => ->Commands.cmd_ping(String, String),
   "!quote"    => ->Commands.cmd_quote(String, String),
   "!so"       => ->Commands.cmd_shoutout(String, String),
@@ -160,6 +161,15 @@ module Commands
       return "#{span.minutes} minutes since we last ducked up"
     end
     return "heyyo"
+  end
+
+  def self.cmd_peas(caller_name : String, duckie_args : String) : String
+    ducky = Ducky.find_by(username: caller_name) # Ducky | Nil
+    if ducky
+      return "you have #{ducky.points} peas!"
+    else
+      return "we couldn't find you; have you already !start_record ? "
+    end
   end
 
   def self.cmd_ping(caller_name : String, duckie_args : String)

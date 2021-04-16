@@ -1,9 +1,8 @@
-require "./command.cr"
+require "./*"
 require "./../data/other_constants.cr"
 require "./../models/ducky.cr"
 require "./../models/leak.cr"
 require "./../models/yak.cr"
-require "colorize"
 require "json"
 
 class Chatty
@@ -34,9 +33,9 @@ class Chatty
     @client = OpenSSL::SSL::Socket::Client.new(tcp_sock)
 
     @client.puts("PASS #{token}")
-    @client.puts("NICK #{bot_name}") # twitch doesn't seem to use this...
+    @client.puts("NICK #{bot_name}") # twitch doesn't seem to use this ???
     @client.puts("JOIN ##{channel_name}")
-    @client.puts("CAP REQ :twitch.tv/tags")
+    @client.puts("CAP REQ :twitch.tv/tags") # gimme them tags booboo
     puts "I'm alive!"
     say("🌊 hi")
   end
@@ -59,13 +58,15 @@ class Chatty
           if username && message
             respond(username, message)
           end
-          # Colorize.new(tags.color)
           if tags.has_key?("color")
-            puts tags["color"].colorize(:light_blue)
+            print "#{now} #{username}: ".colorize(Colors.from_hex(tags["color"]))
+            puts message # 6 spaces preceding message to inline with time
+          else
+            print "#{now} #{username}: ".colorize(Colors.from_username(username))
+            puts message
           end
-          puts "#{now} #{username}: #{message} ".colorize(:light_magenta)
         else
-          puts "#{now} #{raw_irc}\n".colorize(:light_blue)
+          puts "#{now} #{raw_irc}\n".colorize(:red)
         end
       end
     end

@@ -178,7 +178,7 @@ module Commands
     if user
       return "go check out twitch.tv/#{user["display_name"]}, they were last working on '#{user["title"]}'"
     else
-      return "you can't spell mate"
+      return "you can't spell mat"
     end
   end
 

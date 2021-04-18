@@ -13,6 +13,10 @@ HELPFUL_HINTS = [
 
 ]
 
+JOKES = [
+  "https://i.redd.it/6wksqjmmyw321.jpg",
+]
+
 QUOTES = [
   "feature; not a bug; sweep it unda tha rug",
   "audacious mispellings are for rappers ONLY. coders should aspire to spell correctly for ctrl+f. f to pay respects right meow.",

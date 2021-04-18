@@ -1,3 +1,4 @@
+require "http/client"
 # sorted alphabetically by value (proc name) and then by key (command string)
 
 DYNAMIC_COMMANDS = {
@@ -181,15 +182,36 @@ module Commands
   end
 
   def self.cmd_shoutout(caller_name : String, duckie_args : String)
-    return "nice try, 👅" if !valid_caller_name?(duckie_args)
-    search_result = `twitch api get search/channels?query=#{duckie_args}`
-    data = JSON.parse(search_result).dig("data") # => JSON::Any
-    user = data.as_a.find { |user| user["display_name"].to_s.downcase == duckie_args.downcase }
+    return "nice try, 👅" if !valid_username?(duckie_args)
+    # search_result = `twitch api get search/channels?query=#{duckie_args}`
+    # data = JSON.parse(search_result).dig("data") # => JSON::Any
+    # user = data.as_a.find { |user| user["display_name"].to_s.downcase == duckie_args.downcase }
+    user = channel_lookup(duckie_args)
     if user
       return "go check out twitch.tv/#{user["display_name"]}, they were last working on '#{user["title"]}'"
     else
       return "you can't spell mat"
     end
+  end
+
+  def self.channel_lookup(channel_name : String)
+    # this assumes that the channel_name doesnt try anything scary
+    headers = HTTP::Headers{
+      "Client-ID"     => ENV["TWITCH_APP_ID"],
+      "Authorization" => "Bearer #{ENV["TWITCH_APP_ACCESS_TOKEN"]}",
+    }
+    result = HTTP::Client.get(
+      url: "https://api.twitch.tv/helix/search/channels?query=#{channel_name}",
+      headers: headers,
+    )
+
+    if !result.success?
+      p! result
+      raise "channel request failed with: #{result.status_code} "
+    end
+    data = JSON.parse(result.body).dig("data") # => JSON::Any
+    user = data.as_a.find { |user| user["display_name"].to_s.downcase == channel_name.downcase }
+    return user
   end
 
   def self.cmd_water(caller_name : String, args : String)
@@ -241,7 +263,7 @@ module Commands
   end
 
   # does caller_name try to escape and call more duckie_args in our terminal?!
-  def self.valid_caller_name?(caller_name : String)
-    /^[A-Za-z0-9_]{4,25}$/.matches?(caller_name)
+  def self.valid_username?(username : String)
+    /^[A-Za-z0-9_]{4,25}$/.matches?(username)
   end
 end

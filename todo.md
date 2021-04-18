@@ -1,14 +1,32 @@
 # TODO
+    **KEYS!**
+### PLUMBING
+    - figure out a way to manage our 
+        - .bashrc stuff, secrets.env stuff
+        - FOR DISTRO HOPPING 
+            - elementary! 
+            - ??
+    - learn docker 
+    - figure out a way to manage the server
+        - for when we want to shut down an instance 
+        - and start up another instance 
+            - etc
 
 
 ### PRIORITY -1
-    1. script for backing up db
-    2. script to scp binaries over to server
+    1. script for backing up db #crontab
+    2. alias to scp binaries over to server
     3. ** REFACTOR THE !SO COMMAND to make its own http requests
         - stop shelling out the command to `twitch-cli`
-    3.5 ??? 
+    5. let binary accept flags
+        - parse flags
+        - run differently depending on the flags given 
+    3.5 ???  
     4. set ~/.ssh/
-
+    6. bot timeout
+        - "wanna become famous?"
+        - "how fast can you type?"
+        - the hoolians 
 
 
 ### PRIORITY 0 
@@ -32,6 +50,21 @@
     - supercows should be a table :D 
 
 ### PRIORITY 1
+    - rename chatty => ??? 
+        - group of ducks: raft, team, paddling 
+            - floaties? 
+            - duck raft? 
+            - duck craft?
+            - watty? 
+            - quatty? 
+            - dacraft? 
+            - no ducks given 
+            - the quack interloop 
+            - wat the duck 
+            - wat the bot 
+            - fowlplay 
+            - dumblequack
+
     - tests 
     - log chat
         - stick reminders in profile && instead of PONG facts
@@ -56,6 +89,7 @@
         - RNG? 
         - a duckie mentions that gambling is not allowed in many countries 
     - how to convert channel points (NANDs) -> peas 
+
 
 ### PRIORITY none aka never getting done  
     - make more emojis, subscribble badges 

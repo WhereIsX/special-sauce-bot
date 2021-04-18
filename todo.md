@@ -1,21 +1,15 @@
 # TODO
-**steps to deply on gcp**
-    1. modify `special-sauce-bot`: 
-        - path 
-            - ENV 
-            - optional run args
-        - remove tunneling pagekite service 
-    1.5 move `last_leaked` (!leaked and !damn commands)
-        - to sqlite3
-    2. on vm
-        - git `special-sauce-bot`
-        - git twitch-cli 
-        - set up ENV variables 
-    3. get certificate for our domain 
-        - get caddy? 
-    3.5 set up `twitch` cli on google server  
-    4. celebrate! 
-    5. make the rest of the features 👇
+
+
+### PRIORITY -1
+    1. script for backing up db
+    2. script to scp binaries over to server
+    3. ** REFACTOR THE !SO COMMAND to make its own http requests
+        - stop shelling out the command to `twitch-cli`
+    3.5 ??? 
+    4. set ~/.ssh/
+
+
 
 ### PRIORITY 0 
     - use granite!

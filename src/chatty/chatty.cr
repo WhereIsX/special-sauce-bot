@@ -56,7 +56,7 @@ class Chatty
           stuff = parse_raw_channel_chatter(raw_irc)
           tags, username, message = stuff[:tags], stuff[:username], stuff[:message]
           if username && message
-            respond(username, message)
+            respond(username, message) unless username == @bot_name
           end
           if tags.has_key?("color")
             print "#{now} #{username}: ".colorize(Colors.from_hex(tags["color"]))

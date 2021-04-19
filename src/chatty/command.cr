@@ -190,21 +190,29 @@ module Commands
     if user
       return "go check out twitch.tv/#{user["display_name"]}, they were last working on '#{user["title"]}'"
     else
-      return "you can't spell mat"
+      return "you can't spell mate"
     end
   end
 
   def self.channel_lookup(channel_name : String)
-    # this assumes that the channel_name doesnt try anything scary
+    # this assumes that the channel_name doesnt try anything scary(user input)
+    # which is handled by `valid_username?` => allows only chars a-z, 0-9
+
+    params = {"query" => channel_name}
+    query_string = URI::Params.encode(params)
     headers = HTTP::Headers{
       "Client-ID"     => ENV["TWITCH_APP_ID"],
       "Authorization" => "Bearer #{ENV["TWITCH_APP_ACCESS_TOKEN"]}",
     }
     result = HTTP::Client.get(
-      url: "https://api.twitch.tv/helix/search/channels?query=#{channel_name}",
+      url: URI.new(
+        scheme: "https",
+        host: "api.twitch.tv",
+        path: "/helix/search/channels",
+        query: query_string
+      ),
       headers: headers,
     )
-
     if !result.success?
       p! result
       raise "channel request failed with: #{result.status_code} "

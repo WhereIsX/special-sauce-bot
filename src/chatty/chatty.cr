@@ -26,13 +26,15 @@ class Chatty
                  bot_name : String,
                  channel_name : String,
                  knit_between_fibers : Channel(Following_Info),
-                 silent_mode = false)
+                 silent_mode : Bool = false,
+                 use_new_irc_msg : Bool = false)
     @bot_name = bot_name
     @channel_name = channel_name
     @knit_between_fibers = knit_between_fibers
     tcp_sock = TCPSocket.new("irc.chat.twitch.tv", 6697)
     @client = OpenSSL::SSL::Socket::Client.new(tcp_sock)
     @silent_mode = silent_mode
+    @use_new_irc_msg = use_new_irc_msg
 
     @client.puts("PASS #{token}")
     @client.puts("NICK #{bot_name}") # twitch doesn't seem to use this ???

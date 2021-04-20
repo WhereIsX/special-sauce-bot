@@ -16,7 +16,7 @@ parser = OptionParser.parse do |parser|
     flag: "-s",
     description: "silent mode: bot does not respond, only `puts` to terminal"
   ) {
-    silent_mode = true
+    chatty.silent_mode = true
   }
 end
 
@@ -31,6 +31,7 @@ chatty = Chatty.new(
   channel_name: ENV["CHANNEL_NAME"],
   knit_between_fibers: channel,
   silent_mode: silent_mode,
+  use_new_irc_msg: false
 )
 
 chatty.listen

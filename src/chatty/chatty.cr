@@ -54,6 +54,7 @@ class Chatty
     spawn do
       while listening && (raw_irc = @client.gets)
         now = Time.local.to_s("%H:%M")
+
         if ping?(raw_irc)
           answer_ping(raw_irc)
         elsif is_user_message?(raw_irc)
@@ -83,10 +84,12 @@ class Chatty
     end
   end
 
-  private def parse_raw_channel_chatter(raw_irc : String) : NamedTuple(
+  # inside irc_message
+  def parse_raw_channel_chatter(raw_irc : String) : NamedTuple(
     tags: Hash(String, String),
     username: String,
     message: String)
+    p! raw_irc
     raw_tags, rest = raw_irc.split(separator: ' ', limit: 2)
     tags = Hash(String, String).new
 
@@ -110,10 +113,12 @@ class Chatty
     return {tags: tags, username: username, message: message}
   end
 
+  # in irc_message
   def is_user_message?(raw_irc)
     return raw_irc.includes? "PRIVMSG"
   end
 
+  # temporarily
   def respond(username : String, message : String)
     message_array = message.split(' ')
     command = message_array.shift
@@ -131,8 +136,6 @@ class Chatty
     end
   end
 
-  # array << more_stuff
-
   def goodbye
     say("🌊 bye")
     # part the channel
@@ -145,6 +148,7 @@ class Chatty
     puts "\n🌊\n"
   end
 
+  # in irc_message
   def ping?(line)
     return line == "PING :tmi.twitch.tv"
   end

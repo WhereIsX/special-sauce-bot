@@ -16,7 +16,7 @@ parser = OptionParser.parse do |parser|
     flag: "-s",
     description: "silent mode: bot does not respond, only `puts` to terminal"
   ) {
-    chatty.silent_mode = true
+    silent_mode = true
   }
 end
 

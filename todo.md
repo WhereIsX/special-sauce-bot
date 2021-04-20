@@ -1,6 +1,7 @@
 # TODO
     **KEYS!**
 ### PLUMBING
+    - set ~/.ssh/
     - figure out a way to manage our 
         - .bashrc stuff, secrets.env stuff
         - FOR DISTRO HOPPING 
@@ -14,15 +15,10 @@
 
 
 ### PRIORITY -1
-    1. script for backing up db #crontab
-    2. alias to scp binaries over to server
-    3. ** REFACTOR THE !SO COMMAND to make its own http requests
-        - stop shelling out the command to `twitch-cli`
     5. let binary accept flags
         - parse flags
         - run differently depending on the flags given 
     3.5 ???  
-    4. set ~/.ssh/
     6. bot timeout
         - "wanna become famous?"
         - "how fast can you type?"
@@ -64,21 +60,24 @@
             - wat the bot 
             - fowlplay 
             - dumblequack
-
+    - cooldown on commands 
     - tests 
-    - log chat
+    - log chat ??
         - stick reminders in profile && instead of PONG facts
     - give duckies titles!!! (table duckies column title)
         - also column ducksona 
     - whoami? --> all record holders get to see their own record
-    - commands to be case insensitive 
+    - commands to be case insensitive
 #### TBD COMMANDS
-    - !peas
-        - returns the peas that a ducky has accumulated 
+    - !ruffle
+    - !quack
+    - !<points> to <gryffindor/ravenclaw/slytherin/hufflepuff>  
+    
     - !feast <amount> <time_duration>
         - feed amount to all duckies who chatted in the last time_duration 
     - !stimulus_peas <amount>
         - feed amount to ALL duckies in record 
+    
     - !trade_peas <reward>
         - but what rewards can we give the duckies??
     - !feedme <amount>
@@ -90,6 +89,14 @@
         - a duckie mentions that gambling is not allowed in many countries 
     - how to convert channel points (NANDs) -> peas 
 
+#### POINTS
+    - use channel points (nands) to redeem a care package! 
+        - 5h/day * 5days/week * 50weeks/year = 1250 h/year 
+            - #dimensional analysis
+        - if we assume the average viewer gets 220 nands/h, 
+            that's 275,000 nands/year if viewer watches ALL hours
+            - which is unreasonable
+        - 137,500 nands in exchange for (a carepackage || donate to charity)
 
 ### PRIORITY none aka never getting done  
     - make more emojis, subscribble badges 

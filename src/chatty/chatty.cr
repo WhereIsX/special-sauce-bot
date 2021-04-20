@@ -25,12 +25,14 @@ class Chatty
   def initialize(token : String,
                  bot_name : String,
                  channel_name : String,
-                 knit_between_fibers : Channel(Following_Info))
+                 knit_between_fibers : Channel(Following_Info),
+                 silent_mode = false)
     @bot_name = bot_name
     @channel_name = channel_name
     @knit_between_fibers = knit_between_fibers
     tcp_sock = TCPSocket.new("irc.chat.twitch.tv", 6697)
     @client = OpenSSL::SSL::Socket::Client.new(tcp_sock)
+    @silent_mode = silent_mode
 
     @client.puts("PASS #{token}")
     @client.puts("NICK #{bot_name}") # twitch doesn't seem to use this ???
@@ -55,8 +57,9 @@ class Chatty
         elsif is_user_message?(raw_irc)
           stuff = parse_raw_channel_chatter(raw_irc)
           tags, username, message = stuff[:tags], stuff[:username], stuff[:message]
-          if username && message
+          if username && message && !@silent_mode
             respond(username, message) unless username == @bot_name
+            # ... unless prevents us from getting into bot wars (!echoing each other)
           end
           if tags.has_key?("color")
             print "#{now} #{username}: ".colorize(Colors.from_hex(tags["color"]))
@@ -98,6 +101,7 @@ class Chatty
       username = captures["username"]
       message = captures["message"]
     else
+      # shouldn't hit this line bc
       username = ""
       message = ""
     end
@@ -108,19 +112,10 @@ class Chatty
     return raw_irc.includes? "PRIVMSG"
   end
 
-  private def rbg_messages(username : String, message : String)
-
-    # a duckys color could be:
-    # - set by them on our db
-    # - set by them on twitch (tag)
-    # - determined by .hash
-  end
-
   def respond(username : String, message : String)
     message_array = message.split(' ')
     command = message_array.shift
     argument = message_array.join(' ')
-
     if command == "!reload" && SUPER_COWS.includes?(username)
       if Chatty.reload_static_commands
         say("you got it bawhs")

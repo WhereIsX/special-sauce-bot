@@ -4,9 +4,23 @@
 # you wouldn't get this from any other lib you tried
 require "./src/chatty/chatty.cr"
 require "./src/servy/servy.cr"
+require "option_parser"
+
+# parse the flags given when program is run
+#   $ ./run -s
+#   to make bot not respond, and print to terminal only
+#   aka a twitch chat client that
+silent_mode = false
+parser = OptionParser.parse do |parser|
+  parser.on(
+    flag: "-s",
+    description: "silent mode: bot does not respond, only `puts` to terminal"
+  ) {
+    silent_mode = true
+  }
+end
 
 alias Following_Info = NamedTuple(broadcaster: String, user: String)
-# alias TwitchEvent = NamedTuple(event_type: String, broadcaster: String, user: String)
 
 channel = Channel(Following_Info).new(10)
 
@@ -16,6 +30,7 @@ chatty = Chatty.new(
   bot_name: ENV["BOT_NAME"],
   channel_name: ENV["CHANNEL_NAME"],
   knit_between_fibers: channel,
+  silent_mode: silent_mode,
 )
 
 chatty.listen

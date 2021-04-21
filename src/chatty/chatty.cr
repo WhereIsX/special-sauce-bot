@@ -53,69 +53,27 @@ class Chatty
     @listening = true
     spawn do
       while listening && (raw_irc = @client.gets)
-        now = Time.local.to_s("%H:%M")
-
-        if ping?(raw_irc)
-          answer_ping(raw_irc)
-        elsif is_user_message?(raw_irc)
-          stuff = parse_raw_channel_chatter(raw_irc)
-          tags, username, message = stuff[:tags], stuff[:username], stuff[:message]
-          if username && message && !@silent_mode
-            respond(username, message) unless username == @bot_name
-            # ... unless prevents us from getting into bot wars (!echoing each other)
+        now = Time.local.to_s
+        ircm = IRCMessage.new(raw_irc)
+        if ircm.type == IRCMessage::MessageType::Ping
+          answer_ping()
+        elsif ircm.type == IRCMessage::MessageType::UserMessage
+          if ircm.username && ircm.message && !@silent_mode
+            # respond to the message accordingly unless chatter is another instance
+            # no more bot fights
+            respond(ircm.username, ircm.message) unless ircm.username == @bot_name
           end
-          if tags.has_key?("color")
-            print "#{now} #{username}: ".colorize(Colors.from_hex(tags["color"]))
-            puts message # 6 spaces preceding message to inline with time
-          else
-            print "#{now} #{username}: ".colorize(Colors.from_username(username))
-            puts message
-          end
-        else
-          puts "#{now} #{raw_irc}\n".colorize(:red)
         end
+        puts ircm.print
       end
     end
 
+    # fiber stuff for follows
     spawn do
       while listening && (following_event = @knit_between_fibers.receive)
         say("Waaat thanks for quackin' along #{following_event[:user]} Waaat")
       end
     end
-  end
-
-  # inside irc_message
-  def parse_raw_channel_chatter(raw_irc : String) : NamedTuple(
-    tags: Hash(String, String),
-    username: String,
-    message: String)
-    p! raw_irc
-    raw_tags, rest = raw_irc.split(separator: ' ', limit: 2)
-    tags = Hash(String, String).new
-
-    raw_tags.split(';').each do |tag|
-      parsed_tag = tag.split('=')
-      next if parsed_tag.size != 2 || parsed_tag.last.empty?
-      # we can asume that we have a nonempty parsed tag
-      tag_name = parsed_tag.first
-      tag_value = parsed_tag.last
-      tags[tag_name] = tag_value
-    end
-    captures = rest.match(/^:(?<username>.+)!.+ PRIVMSG #\w+ :(?<message>.+)$/)
-    if captures
-      username = captures["username"]
-      message = captures["message"]
-    else
-      # shouldn't hit this line bc
-      username = ""
-      message = ""
-    end
-    return {tags: tags, username: username, message: message}
-  end
-
-  # in irc_message
-  def is_user_message?(raw_irc)
-    return raw_irc.includes? "PRIVMSG"
   end
 
   # temporarily
@@ -148,12 +106,7 @@ class Chatty
     puts "\n🌊\n"
   end
 
-  # in irc_message
-  def ping?(line)
-    return line == "PING :tmi.twitch.tv"
-  end
-
-  def answer_ping(line : String)
+  def answer_ping
     say PONG_FACTS[Random.rand(PONG_FACTS.size)] # "PONG" :>
   end
 end

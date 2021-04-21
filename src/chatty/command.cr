@@ -270,6 +270,8 @@ module Commands
     return "today we shaved: #{topics}"
   end
 
+  # we have a Ducky class...
+  # why not move valid_username? into validations for Ducky.class???
   # does caller_name try to escape and call more duckie_args in our terminal?!
   def self.valid_username?(username : String)
     /^[A-Za-z0-9_]{4,25}$/.matches?(username)

@@ -1,12 +1,19 @@
-require "chat_colors.cr"
+require "./chat_colors.cr"
 
 class IRCMessage
-  getter type
+  getter type, time, username, message, raw_irc
+
+  @raw_irc : String
+  @time : Time
+  @type : MessageType | Nil
+  @tags : Hash(String, String)
+  @username : String
+  @message : String
 
   enum MessageType
+    TwitchMessage
     Ping
     UserMessage
-    TwitchMessage
   end
 
   alias ParsedUserMessage = NamedTuple(
@@ -16,19 +23,31 @@ class IRCMessage
   )
 
   def initialize(@raw_irc : String)
-    # parse what what type this IRC message is
-    @type : MessageType | Nil = parse_type()
+    @time = Time.local
+    @type = parse_type()
+    @tags = Hash(String, String).new
+    @username = ""
+    @message = @raw_irc
 
     # then parse it further if is user message
-    @parsed_user_message : ParsedUserMessage | Nil = parse()
+    if @type == MessageType::UserMessage
+      @tags = parse()[:tags]
+      @username = parse()[:username]
+      @message = parse()[:message]
+    end
   end
 
   # TODO: rename username => sender
   # parse_user_message?
-  def parse : ParsedUserMessage | Nil
+  def parse : NamedTuple(
+    username: String,
+    message: String,
+    tags: Hash(String, String),
+  )
     raw_tags, rest = @raw_irc.split(separator: ' ', limit: 2)
     tags = Hash(String, String).new
 
+    # populate the tags hash
     raw_tags.split(';').each do |tag|
       parsed_tag = tag.split('=')
       next if parsed_tag.size != 2 || parsed_tag.last.empty?
@@ -37,6 +56,8 @@ class IRCMessage
       tag_value = parsed_tag.last
       tags[tag_name] = tag_value
     end
+
+    # get the username and message
     captures = rest.match(/^:(?<username>.+)!.+ PRIVMSG #\w+ :(?<message>.+)$/)
     if captures
       username = captures["username"]
@@ -62,7 +83,7 @@ class IRCMessage
     elsif twitch_message?
       return MessageType::TwitchMessage
     end
-    return Nil
+    return nil
   end
 
   def ping? : Bool
@@ -75,32 +96,33 @@ class IRCMessage
     return @raw_irc.includes?("PRIVMSG")
   end
 
-  def twitch_message?
+  def twitch_message? : Bool
     return @raw_irc.starts_with?(":tmi.twitch.tv")
   end
 
-  # WIP HERE!
-  def print
+  def print : String
     # assemble a string ready for printing to terminal
-
-    #  # if user set a color on twitch
-    if tags.has_key?("color")
-      print "#{now} #{username}: ".colorize(Colors.from_hex(tags["color"]))
-      puts message # 6 spaces preceding message to inline with time
-      # if user doesn't have a color, we deterministically hash them one :>
-    else
-      print "#{now} #{username}: ".colorize(Colors.from_username(username))
-      puts message
-    end
-
     case @type
-    when MessageType::Ping
-      return
-    when MessageType::UserMessage
-      return
     when MessageType::TwitchMessage
-      return @raw_irc.colorize(:light_magenta)
+      return "🔧 #{@raw_irc}".colorize(:light_magenta).to_s
+    when MessageType::Ping
+      return "🏓 #{@raw_irc}".colorize(:cyan).to_s
+    when MessageType::UserMessage
+      if @tags.nil?
+        return "wat".colorize(:red).to_s
+      end
+
+      if @tags.has_key?("color")
+        # if user set a color on twitch
+        header = "#{@time.to_s("%H:%M")} #{@username}: ".colorize(Colors.from_hex(@tags["color"]))
+        return header.to_s + message
+      else
+        # if user doesn't have a color, we deterministically hash them one :>
+        header = "#{@time.to_s("%H:%M")} #{@username}: ".colorize(Colors.from_username(username))
+        return header.to_s + message
+      end
     end
-    return "💔 wtf is this? \n#{@raw_irc}".colorize(:red)
+    return "💔 wtf is this!? \n#{@raw_irc}".colorize(:red).to_s
+    # return @raw_irc.colorize(:red).to_s
   end
 end

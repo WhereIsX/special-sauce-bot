@@ -58,10 +58,8 @@ class Chatty
         if ircm.type == IRCMessage::MessageType::Ping
           answer_ping()
         elsif ircm.type == IRCMessage::MessageType::UserMessage
-          if ircm.username && ircm.message && !@silent_mode
-            # respond to the message accordingly unless chatter is another instance
-            # no more bot fights
-            respond(ircm.username, ircm.message) unless ircm.username == @bot_name
+          if should_respond_to_message?(ircm.username, ircm.message)
+            respond(ircm.username, ircm.message)
           end
         end
         puts ircm.print
@@ -74,6 +72,12 @@ class Chatty
         say("Waaat thanks for quackin' along #{following_event[:user]} Waaat")
       end
     end
+  end
+
+  def should_respond_to_message?(username : String, message : String)
+    # silent mode == don't say anything to chat
+    # also no more bot fights
+    return !@silent_mode && username && message && username != @botname
   end
 
   # temporarily

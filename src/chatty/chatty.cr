@@ -77,7 +77,7 @@ class Chatty
   def should_respond_to_message?(username : String, message : String)
     # silent mode == don't say anything to chat
     # also no more bot fights
-    return !@silent_mode && username && message && username != @botname
+    return !@silent_mode && username && message && username != @bot_name
   end
 
   # temporarily
@@ -87,7 +87,7 @@ class Chatty
     argument = message_array.join(' ')
     if command == "!reload" && SUPER_COWS.includes?(username)
       if Chatty.reload_static_commands
-        say("you got it bawhs")
+        # say("you got it bawhs")
       else # reload failed
         say("theres probably some trailing comma in the shit json, ya wat")
       end
@@ -111,6 +111,10 @@ class Chatty
   end
 
   def answer_ping
-    say PONG_FACTS[Random.rand(PONG_FACTS.size)] # "PONG" :>
+    if @silent_mode
+      say "have you joined the flock yet? !start_record so we can start feeding you peas :>"
+    else
+      say PONG_FACTS[Random.rand(PONG_FACTS.size)] # "PONG" :>
+    end
   end
 end

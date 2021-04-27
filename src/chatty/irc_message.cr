@@ -114,11 +114,11 @@ class IRCMessage
 
       if @tags.has_key?("color")
         # if user set a color on twitch
-        header = "#{@time.to_s("%H:%M")} #{@username}: ".colorize(Colors.from_hex(@tags["color"]))
+        header = "#{@time.to_s("%H:%M")} 🎨#{@username}: ".colorize(Colors.from_hex(@tags["color"]))
         return header.to_s + message
       else
         # if user doesn't have a color, we deterministically hash them one :>
-        header = "#{@time.to_s("%H:%M")} #{@username}: ".colorize(Colors.from_username(username))
+        header = "#{@time.to_s("%H:%M")} ️️️❔#{@username}: ".colorize(Colors.from_username(username))
         return header.to_s + message
       end
     end

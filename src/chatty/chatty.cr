@@ -1,4 +1,4 @@
-require "./*"
+require "./**" # import everything including dir inside ourselves :>
 require "./../data/other_constants.cr"
 require "./../models/ducky.cr"
 require "./../models/leak.cr"
@@ -55,11 +55,12 @@ class Chatty
       while listening && (raw_irc = @client.gets)
         now = Time.local.to_s
         ircm = IRCMessage.new(raw_irc)
-        if ircm.type == IRCMessage::MessageType::Ping
+        if ircm.is_ping?
           answer_ping()
-        elsif ircm.type == IRCMessage::MessageType::UserMessage
+        elsif ircm.is_user_msg?
           if should_respond_to_message?(ircm.username, ircm.message)
-            respond(ircm.username, ircm.message)
+            # respond_old(ircm.username, ircm.message)
+            respond(ircm)
           end
         end
         puts ircm.print
@@ -81,7 +82,7 @@ class Chatty
   end
 
   # temporarily
-  def respond(username : String, message : String)
+  def respond_old(username : String, message : String)
     message_array = message.split(' ')
     command = message_array.shift
     argument = message_array.join(' ')
@@ -95,6 +96,12 @@ class Chatty
       say(weturn.call(username, argument))
     elsif @@static_commands.has_key?(command)
       say(@@static_commands[command])
+    end
+  end
+
+  def respond(ircm)
+    if Command.is_command?(ircm)
+      say Command.get_command(ircm).call(ircm)
     end
   end
 

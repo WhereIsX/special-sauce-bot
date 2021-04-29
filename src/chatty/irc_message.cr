@@ -1,7 +1,7 @@
 require "./chat_colors.cr"
 
 class IRCMessage
-  getter type, time, username, message, raw_irc
+  getter(type, time, username, message, raw_irc, words)
 
   @raw_irc : String
   @time : Time
@@ -9,6 +9,7 @@ class IRCMessage
   @tags : Hash(String, String)
   @username : String
   @message : String
+  @words : Array(String)
 
   enum MessageType
     TwitchMessage
@@ -16,24 +17,20 @@ class IRCMessage
     UserMessage
   end
 
-  alias ParsedUserMessage = NamedTuple(
-    username: String,
-    message: String,
-    tags: Hash(String, String),
-  )
-
   def initialize(@raw_irc : String)
     @time = Time.local
     @type = parse_type()
-    @tags = Hash(String, String).new
     @username = ""
     @message = @raw_irc
+    @words = Array(String).new
+    @tags = Hash(String, String).new
 
     # then parse it further if is user message
     if @type == MessageType::UserMessage
       @tags = parse()[:tags]
       @username = parse()[:username]
       @message = parse()[:message]
+      @words = @message.split(' ', remove_empty: true)
     end
   end
 
@@ -86,9 +83,17 @@ class IRCMessage
     return nil
   end
 
-  def ping? : Bool
+  private def ping? : Bool
     # pray to the twitch gods they dont change their ping string
     return @raw_irc.starts_with?("PING")
+  end
+
+  def is_ping? : Bool
+    @type == MessageType::Ping
+  end
+
+  def is_user_msg? : Bool
+    @type == MessageType::UserMessage
   end
 
   def user_message? : Bool

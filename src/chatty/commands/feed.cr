@@ -9,39 +9,40 @@ Command.new(
 
   # no caller record
   if caller.nil? || !caller.super_cow_power
-    return "youre not a supercow.. are you sure you have SUDO cow powers?"
+    next "youre not a supercow.. are you sure you have SUDO cow powers?"
   end
-  # wrong number of arguments
-  if args.size == 0 || args.size > 2
-    return "wat.  try #{Command.all["!feed"].descrption}"
+
+  arg_size = args.size.to_u
+
+  case arg_size
+  when 1
+    # give ducky the default amount of points
+    points = 10
+  when 2
+    # try* to parse to int, if not default to 0
+    points = args.last.to_i { 0 }
+  else
+    # wrong number of arguments
+    next "wat.  try #{Command.all["!feed"].description}"
   end
 
   ducky = Ducky.find_by(username: args.first.downcase)
   # cant find ducky to feed
   if ducky.nil?
-    return "hmm.. #{args.first} should !start_record to recieve feed"
-  end
-
-  case args.size
-  when 1
-    points = 10
-    # give ducky the default amount of points
-  when 2
-    points = args.last.to_i { 0 }
-    # try* to parse to int, if not default to 0
+    next "hmm.. #{args.first} should !start_record to recieve feed"
   end
 
   if points.zero?
-    return "#{caller} thats either an invalid number, or you're trying to trick our poor duckies into eating nothingness"
+    next "#{caller} thats either an invalid number, or you're trying to trick our poor duckies into eating nothingness"
   elsif points.abs > 1000
-    return "too much feed"
+    next "too much feed"
   end
 
   ducky.points += points
 
   if ducky.save
-    return "after feeding #{points}, #{ducky.name} now has #{ducky.points} peas!"
+    next "after feeding #{points}, #{ducky.username} now has #{ducky.points} peas!"
   else
-    return "we have the ducky and the peas. but couldn't save?"
+    next "we have the ducky and the peas. but couldn't save?"
   end
 end

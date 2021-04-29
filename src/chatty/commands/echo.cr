@@ -6,10 +6,10 @@ Command.new(
 ) do |ircm|
   _, args = Command.parse_ircm(ircm)
   if args.empty?
-    return "actually, it's !echo <words>"
-  elsif duckie_args[0] == '/' || duckie_args[0] == '.' # super secure
-    return "nice try. 👅"
+    next "actually, it's !echo <words>"
+  elsif args[0] == '/' || args[0] == '.' # super secure
+    next "nice try. 👅"
   else
-    return duckie_args
+    next args.join(' ')
   end
 end

@@ -7,12 +7,21 @@
 # remove from Chatty:
 # @@static_commands
 # reload_static_commands
+# if enough duckies type:
+# !mute <username>
+# within a time period,
+# bot will automute(?)
 
 require "../irc_message.cr"
 
 class Command
   @@all = Hash(String, Command).new
   getter description
+
+  enum Update
+    Revoke
+    Give
+  end
 
   def initialize(
     @name : String,

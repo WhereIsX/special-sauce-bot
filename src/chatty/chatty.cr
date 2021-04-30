@@ -1,5 +1,5 @@
 require "./**" # import everything including dir inside ourselves :>
-require "./../data/other_constants.cr"
+require "./../data/constants_collection.cr"
 require "./../models/ducky.cr"
 require "./../models/leak.cr"
 require "./../models/yak.cr"

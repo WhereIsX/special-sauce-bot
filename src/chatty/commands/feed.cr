@@ -1,4 +1,5 @@
 require "./command.cr"
+require "../../models/ducky.cr"
 
 Command.new(
   name: "!feed",

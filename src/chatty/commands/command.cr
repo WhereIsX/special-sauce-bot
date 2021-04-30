@@ -12,28 +12,31 @@ require "../irc_message.cr"
 
 class Command
   @@all = Hash(String, Command).new
-  getter description
+  getter name, description
 
   def initialize(
     @name : String,
     @description : String,
     &@proc : IRCMessage -> String
   )
+    if @name.empty?
+      raise ArgumentError.new("name is undefined")
+    end
+
     @@all[@name] = self
   end
 
-  def call(ircm) : String
+  def call(ircm : IRCMessage) : String
     @proc.call(ircm)
   end
 
-  # where_is_x: !feed 10 duckyname
-  def self.parse_ircm(ircm) : Tuple(Ducky?, Array(String))
+  def self.parse_ircm(ircm : IRCMessage) : Tuple(Ducky?, Array(String))
     ducky = Ducky.find_by(username: ircm.username)
     args = ircm.words
     return ducky, args[1..]
   end
 
-  def self.all
+  def self.all : Hash(String, Command)
     @@all
   end
 
@@ -46,7 +49,7 @@ class Command
   end
 
   def self.get_command(ircm : IRCMessage) : Command
-    raise "ircm is not a command" if !Command.is_command?(ircm)
+    raise ArgumentError.new("#{ircm} is not a command") if !Command.is_command?(ircm)
     command_name = ircm.words.first
     return @@all[command_name]
   end

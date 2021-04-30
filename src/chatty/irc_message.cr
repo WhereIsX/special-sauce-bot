@@ -27,9 +27,10 @@ class IRCMessage
 
     # then parse it further if is user message
     if @type == MessageType::UserMessage
-      @tags = parse()[:tags]
-      @username = parse()[:username]
-      @message = parse()[:message]
+      parsed_ircm = parse()
+      @tags = parsed_ircm[:tags]
+      @username = parsed_ircm[:username]
+      @message = parsed_ircm[:message]
       @words = @message.split(' ', remove_empty: true)
     end
   end

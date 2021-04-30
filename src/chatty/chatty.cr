@@ -81,24 +81,6 @@ class Chatty
     return !@silent_mode && username && message && username != @bot_name
   end
 
-  # temporarily
-  def respond_old(username : String, message : String)
-    message_array = message.split(' ')
-    command = message_array.shift
-    argument = message_array.join(' ')
-    if command == "!reload" && SUPER_COWS.includes?(username)
-      if Chatty.reload_static_commands
-        # say("you got it bawhs")
-      else # reload failed
-        say("theres probably some trailing comma in the shit json, ya wat")
-      end
-    elsif weturn = DYNAMIC_COMMANDS[command]? # weturn => return => naming things is hard
-      say(weturn.call(username, argument))
-    elsif @@static_commands.has_key?(command)
-      say(@@static_commands[command])
-    end
-  end
-
   def respond(ircm)
     if Command.is_command?(ircm)
       say Command.get_command(ircm).call(ircm)

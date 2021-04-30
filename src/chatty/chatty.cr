@@ -102,6 +102,18 @@ class Chatty
   def respond(ircm)
     if Command.is_command?(ircm)
       say Command.get_command(ircm).call(ircm)
+    elsif @@static_commands.has_key?(ircm.words.first)
+      say(@@static_commands[ircm.words.first])
+    elsif ircm.words.first == "!reload"
+      ducky = Ducky.find_by(username: ircm.username)
+      if ducky.nil? || !ducky.super_cow_power
+        say("you don't look like a super cow to me... are you sure you have SUDO cow powers?")
+      end
+      if Chatty.reload_static_commands
+        say("you got it bawhs")
+      else # reload failed
+        say("theres probably some trailing comma in the shit json, ya wat")
+      end
     end
   end
 

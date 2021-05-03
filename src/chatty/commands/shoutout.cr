@@ -1,3 +1,4 @@
+require "http"
 require "./command.cr"
 require "../../models/ducky.cr"
 
@@ -7,7 +8,7 @@ Command.new(
 ) do |ircm|
   _, arg = Command.parse_ircm(ircm)
   channel_name = arg.first
-  next "nice try, 👅" if !Ducky.valid_username?(channel_name)
+  next "nice try, 👅" if !Model::Ducky.valid_username?(channel_name)
   # search_result = `twitch api get search/channels?query=#{duckie_args}`
   # data = JSON.parse(search_result).dig("data") # => JSON::Any
   # user = data.as_a.find { |user| user["display_name"].to_s.downcase == duckie_args.downcase }

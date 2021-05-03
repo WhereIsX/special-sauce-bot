@@ -6,7 +6,7 @@ Command.new(
   description: "whether the bot can @ you in chat; !consent <revoke/give> "
 ) do |ircm|
   update = Command::Update.parse?(ircm.words[1])
-  ducky = Ducky.find_by(username: ircm.username)
+  ducky = Model::Ducky.find_by(username: ircm.username)
 
   if ducky.nil?
     next "sorry, we couldn't find you. have you already `!start_record` ?"

@@ -9,7 +9,7 @@ Command.new(
     next "who're you trying to delete? try !burn_record #{ircm.username}"
   end
   # below this line, keep in mind that ircm.username == duckie_args
-  if ducky = Ducky.find_by(username: ircm.username)
+  if ducky = Model::Ducky.find_by(username: ircm.username)
     ducky.destroy
     if ducky.destroyed?
       next "burnt to a crisp!"

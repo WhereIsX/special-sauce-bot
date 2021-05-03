@@ -39,8 +39,8 @@ class Command
     @proc.call(ircm)
   end
 
-  def self.parse_ircm(ircm : IRCMessage) : Tuple(Ducky?, Array(String))
-    ducky = Ducky.find_by(username: ircm.username)
+  def self.parse_ircm(ircm : IRCMessage) : Tuple(Model::Ducky?, Array(String))
+    ducky = Model::Ducky.find_by(username: ircm.username)
     args = ircm.words
     return ducky, args[1..]
   end

@@ -10,7 +10,7 @@ Command.new(
   if ircm.words.size != 2
     next "you wat. it's !water <ducky_name>"
   end
-  duckie = Ducky.find_by(username: ircm.words[1].downcase)
+  duckie = Model::Ducky.find_by(username: ircm.words[1].downcase)
   if duckie.nil?
     next "no such duckie, have they `!start_record` yet?"
   elsif duckie.at_me_consent

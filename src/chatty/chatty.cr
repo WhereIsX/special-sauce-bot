@@ -87,7 +87,7 @@ class Chatty
     elsif @@static_commands.has_key?(ircm.words.first)
       say(@@static_commands[ircm.words.first])
     elsif ircm.words.first == "!reload"
-      ducky = Ducky.find_by(username: ircm.username)
+      ducky = Model::Ducky.find_by(username: ircm.username)
       if ducky.nil? || !ducky.super_cow_power
         say("you don't look like a super cow to me... are you sure you have SUDO cow powers?")
       end

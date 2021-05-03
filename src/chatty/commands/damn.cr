@@ -11,7 +11,7 @@ Command.new(
     next "not authorized to record a new !leaked keys time"
   end
 
-  leak = Leak.new(created_at: Time.utc)
+  leak = Model::Leak.new(created_at: Time.utc)
   if leak.save
     next "you get a new key! you get a new key! EVERYBODY GETS A NEW KEY!!"
   else

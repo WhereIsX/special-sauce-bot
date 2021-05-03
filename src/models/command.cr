@@ -1,12 +1,13 @@
 require "./../../config/db.cr"
 
 module Model
-  class Yak < Granite::Base
+  class Command < Granite::Base
     connection sqlite
-    table yak # Name of the table to use for the model, defaults to class name snake cased
+    table command # Name of the table to use for the model, defaults to class name snake cased
 
     column id : Int32, primary: true # Primary key, defaults to AUTO INCREMENT
+    column name : String
+    column response : String
     column created_at : Time
-    column topic : String
   end
 end

@@ -5,7 +5,7 @@ Command.new(
   name: "!todayishaved",
   description: "lists all the tangents we've gone on"
 ) do |ircm|
-  yaks = Yak.where(:created_at, :gt, 12.hours.ago)
+  yaks = Model::Yak.where(:created_at, :gt, 12.hours.ago)
     .where(:topic, :neq, "")
     .select
 

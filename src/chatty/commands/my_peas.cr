@@ -5,7 +5,7 @@ Command.new(
   name: "!my_peas",
   description: "shows how many peas you have"
 ) do |ircm|
-  ducky = Ducky.find_by(username: ircm.username) # Ducky | Nil
+  ducky = Model::Ducky.find_by(username: ircm.username) # Model::Ducky | Nil
   if ducky
     next "you have #{ducky.points} peas!"
   else

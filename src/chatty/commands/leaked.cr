@@ -5,7 +5,7 @@ Command.new(
   name: "!leaked",
   description: "show help on specified command, or list commands if none specified; !help <command>"
 ) do |ircm|
-  leak_record = Leak.order(created_at: :desc).limit(1).select.first
+  leak_record = Model::Leak.order(created_at: :desc).limit(1).select.first
 
   next "there were no leaks 🙃" if leak_record.nil?
   span = Time.utc - leak_record.created_at

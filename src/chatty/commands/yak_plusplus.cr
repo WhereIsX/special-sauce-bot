@@ -6,7 +6,7 @@ Command.new(
   name: "!yak++",
   description: "increment our yak counter and optionally specify the topic we shaved; !yak++ <optional: topic>"
 ) do |ircm|
-  yak = Yak.new(created_at: Time.utc)
+  yak = Model::Yak.new(created_at: Time.utc)
   if ircm.words[1..].join(' ')
     yak.topic = ircm.words[1..].join(' ')
   else
@@ -14,7 +14,7 @@ Command.new(
   end
 
   if yak.save
-    yaks_shaved = Yak.where(:created_at, :gt, 12.hours.ago).select.size
+    yaks_shaved = Model::Yak.where(:created_at, :gt, 12.hours.ago).select.size
     case yaks_shaved
     when 0
       next "yaks are wooly! here're some Shears :>"

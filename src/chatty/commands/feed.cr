@@ -27,7 +27,7 @@ Command.new(
     next "wat.  try #{Command.all["!feed"].description}"
   end
 
-  ducky = Ducky.find_by(username: args.first.downcase)
+  ducky = Model::Ducky.find_by(username: args.first.downcase)
   # cant find ducky to feed
   if ducky.nil?
     next "hmm.. #{args.first} should !start_record to recieve feed"

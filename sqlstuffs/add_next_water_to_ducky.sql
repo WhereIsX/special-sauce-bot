@@ -1,5 +1,5 @@
--- ALTER TABLE ducky 
--- ADD COLUMN next_water TEXT;
+ALTER TABLE ducky 
+ADD COLUMN next_water TEXT;
 
 
 UPDATE ducky 

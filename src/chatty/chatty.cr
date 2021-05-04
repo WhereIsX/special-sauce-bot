@@ -43,16 +43,9 @@ class Chatty
         ircm = IRCMessage.new(raw_irc)
         if ircm.is_ping?
           answer_ping()
-<<<<<<< HEAD
-        elsif ircm.type == IRCMessage::MessageType::UserMessage
-          if should_respond_to_message?(ircm.username, ircm.message)
-            respond(ircm.username, ircm.message)
-=======
         elsif ircm.is_user_msg?
           if should_respond_to_message?(ircm.username, ircm.message)
-            # respond_old(ircm.username, ircm.message)
             respond(ircm)
->>>>>>> SHINY!
           end
         end
         puts ircm.print

@@ -5,6 +5,10 @@ Command.new(
   name: "!consent",
   description: "whether the bot can @ you in chat; !consent <revoke/give> "
 ) do |ircm|
+  if ircm.words.size < 2
+    next "you wat, it's !consent <revoke/give>"
+  end
+
   update = Command::Update.parse?(ircm.words[1])
   ducky = Model::Ducky.find_by(username: ircm.username)
 

@@ -7,7 +7,7 @@ def populate_z_commands
 
     c = Model::Command.create(name: name, response: resp, created_at: Time.local)
     if c.errors.any?
-      raise c.errors.t_s
+      raise c.errors.to_s
     end
   end
 end

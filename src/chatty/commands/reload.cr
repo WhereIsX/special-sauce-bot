@@ -21,6 +21,7 @@ Command.new(
   # and make them into Commands to be used in chat
   db_cmds = Model::Command.all
   db_cmds.each do |cmd|
+    next if Command.all.has_key?(cmd.name)
     Command.new(
       name: cmd.name,
       description: "static command-- simply type #{cmd.name}"

@@ -9,5 +9,9 @@ module Model
     column name : String
     column response : String
     column created_at : Time
+
+    validate :name, "must start with a bang" do |cmd|
+      cmd.name.starts_with? '!'
+    end
   end
 end

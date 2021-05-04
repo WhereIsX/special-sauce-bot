@@ -1,0 +1,7 @@
+CREATE TABLE IF NOT EXISTS command
+(
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    name TEXT NOT NULL UNIQUE,
+    response TEXT NOT NULL,
+    created_at TEXT NOT NULL
+)

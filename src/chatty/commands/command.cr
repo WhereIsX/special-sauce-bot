@@ -15,6 +15,7 @@
 require "../irc_message.cr"
 
 class Command
+  @@static = Array(String).new
   @@all = Hash(String, Command).new
   getter name, description
 
@@ -47,6 +48,14 @@ class Command
 
   def self.all : Hash(String, Command)
     @@all
+  end
+
+  def self.static : Array(String)
+    @@static
+  end
+
+  def self.static=(new_static : Array(String))
+    @@static = new_static
   end
 
   def self.is_command?(ircm : IRCMessage) : Bool

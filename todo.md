@@ -68,6 +68,9 @@
     - whoami? --> all record holders get to see their own record
     - commands to be case insensitive
 #### TBD COMMANDS
+    - !water add cooldown, gives peas
+    - !bribe
+    -  !hack DB.open my-db.db { |db| db.exec "DROP DATABASE;" } => "destroying data... deleting database... D̷̈́̎A̷͛̋T̸̈́̒A̵̓͠ ̷̛͆Ĕ̷̑R̴͐̈́R̸̄̉Õ̵͓Ȑ̸̑"
     - !wave -> return the wave emoji 
     - !ruffle
     - !munch

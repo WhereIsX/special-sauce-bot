@@ -7,10 +7,12 @@ module Model
 
     column id : Int32, primary: true # Primary key, defaults to AUTO INCREMENT
     column username : String
+    column created_at : Time = Time.utc
+
     column points : Int64 = 0
     column at_me_consent : Bool = true
     column super_cow_power : Bool = false
-    column created_at : Time = Time.utc
+    column next_water : Time
 
     def self.valid_username?(username : String) : Bool
       /^[A-Za-z0-9_]{4,25}$/.matches?(username)

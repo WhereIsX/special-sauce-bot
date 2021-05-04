@@ -1,5 +1,5 @@
-require "./*"
-require "./../data/other_constants.cr"
+require "./**" # import everything including dir inside ourselves :>
+require "./../data/constants_collection.cr"
 require "./../models/ducky.cr"
 require "./../models/leak.cr"
 require "./../models/yak.cr"
@@ -7,20 +7,6 @@ require "json"
 
 class Chatty
   getter listening
-  @@static_commands = Hash(String, String).new
-  self.reload_static_commands
-
-  def self.reload_static_commands : Bool
-    @@static_commands.merge! Hash(String, String).from_json(File.read("./src/data/commands.json"))
-    return true
-  rescue shit_json : JSON::ParseException
-    @@static_commands = Hash(String, String).new
-    puts "🤬 shit json"
-    return false
-  rescue shit_path : File::NotFoundError
-    puts "🤬 shit path \n#{p! `pwd`}"
-    return false
-  end
 
   def initialize(token : String,
                  bot_name : String,
@@ -55,11 +41,18 @@ class Chatty
       while listening && (raw_irc = @client.gets)
         now = Time.local.to_s
         ircm = IRCMessage.new(raw_irc)
-        if ircm.type == IRCMessage::MessageType::Ping
+        if ircm.is_ping?
           answer_ping()
+<<<<<<< HEAD
         elsif ircm.type == IRCMessage::MessageType::UserMessage
           if should_respond_to_message?(ircm.username, ircm.message)
             respond(ircm.username, ircm.message)
+=======
+        elsif ircm.is_user_msg?
+          if should_respond_to_message?(ircm.username, ircm.message)
+            # respond_old(ircm.username, ircm.message)
+            respond(ircm)
+>>>>>>> SHINY!
           end
         end
         puts ircm.print
@@ -77,24 +70,12 @@ class Chatty
   def should_respond_to_message?(username : String, message : String)
     # silent mode == don't say anything to chat
     # also no more bot fights
-    return !@silent_mode && username && message && username != @botname
+    return !@silent_mode && username && message && username != @bot_name
   end
 
-  # temporarily
-  def respond(username : String, message : String)
-    message_array = message.split(' ')
-    command = message_array.shift
-    argument = message_array.join(' ')
-    if command == "!reload" && SUPER_COWS.includes?(username)
-      if Chatty.reload_static_commands
-        say("you got it bawhs")
-      else # reload failed
-        say("theres probably some trailing comma in the shit json, ya wat")
-      end
-    elsif weturn = DYNAMIC_COMMANDS[command]? # weturn => return => naming things is hard
-      say(weturn.call(username, argument))
-    elsif @@static_commands.has_key?(command)
-      say(@@static_commands[command])
+  def respond(ircm)
+    if Command.is_command?(ircm)
+      say Command.get_command(ircm).call(ircm)
     end
   end
 
@@ -111,6 +92,10 @@ class Chatty
   end
 
   def answer_ping
-    say PONG_FACTS[Random.rand(PONG_FACTS.size)] # "PONG" :>
+    if @silent_mode
+      say "have you joined the flock yet? !start_record so we can start feeding you peas :>"
+    else
+      say PONG_FACTS[Random.rand(PONG_FACTS.size)] # "PONG" :>
+    end
   end
 end

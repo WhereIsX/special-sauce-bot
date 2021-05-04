@@ -1,11 +1,11 @@
 # TODO
-    **KEYS!**
+    - learn emacs to use crdt for collaboration!!! 
 ### PLUMBING
     - set ~/.ssh/
     - figure out a way to manage our 
         - .bashrc stuff, secrets.env stuff
         - FOR DISTRO HOPPING 
-            - elementary! 
+            - elementary
             - ??
     - learn docker 
     - figure out a way to manage the server
@@ -15,10 +15,9 @@
 
 
 ### PRIORITY -1
-    5. let binary accept flags
-        - parse flags
-        - run differently depending on the flags given 
-    3.5 ???  
+    
+    3.5 yak queue that duckies can shepard into the penn and 
+        - yana can shift the first yak off and shave it :> 
     6. bot timeout
         - "wanna become famous?"
         - "how fast can you type?"
@@ -69,7 +68,12 @@
     - whoami? --> all record holders get to see their own record
     - commands to be case insensitive
 #### TBD COMMANDS
+    - !water add cooldown, gives peas
+    - !bribe
+    -  !hack DB.open my-db.db { |db| db.exec "DROP DATABASE;" } => "destroying data... deleting database... D̷̈́̎A̷͛̋T̸̈́̒A̵̓͠ ̷̛͆Ĕ̷̑R̴͐̈́R̸̄̉Õ̵͓Ȑ̸̑"
+    - !wave -> return the wave emoji 
     - !ruffle
+    - !munch
     - !quack
     - !<points> to <gryffindor/ravenclaw/slytherin/hufflepuff>  
     

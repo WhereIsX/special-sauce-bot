@@ -1,9 +1,3 @@
-# GOAL:
-# make it so that we can add new commands under their own file
-# aka dont want to shove all commands in 1 file
-
-# AND combine static && dynamic commands under this module
-
 # remove from Chatty:
 # @@static_commands
 # reload_static_commands

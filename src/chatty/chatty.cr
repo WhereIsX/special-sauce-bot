@@ -7,20 +7,6 @@ require "json"
 
 class Chatty
   getter listening
-  @@static_commands = Hash(String, String).new
-  self.reload_static_commands
-
-  def self.reload_static_commands : Bool
-    @@static_commands.merge! Hash(String, String).from_json(File.read("./src/data/commands.json"))
-    return true
-  rescue shit_json : JSON::ParseException
-    @@static_commands = Hash(String, String).new
-    puts "🤬 shit json"
-    return false
-  rescue shit_path : File::NotFoundError
-    puts "🤬 shit path \n#{p! `pwd`}"
-    return false
-  end
 
   def initialize(token : String,
                  bot_name : String,
@@ -84,18 +70,6 @@ class Chatty
   def respond(ircm)
     if Command.is_command?(ircm)
       say Command.get_command(ircm).call(ircm)
-    elsif @@static_commands.has_key?(ircm.words.first)
-      say(@@static_commands[ircm.words.first])
-    elsif ircm.words.first == "!reload"
-      ducky = Model::Ducky.find_by(username: ircm.username)
-      if ducky.nil? || !ducky.super_cow_power
-        say("you don't look like a super cow to me... are you sure you have SUDO cow powers?")
-      end
-      if Chatty.reload_static_commands
-        say("you got it bawhs")
-      else # reload failed
-        say("theres probably some trailing comma in the shit json, ya wat")
-      end
     end
   end
 

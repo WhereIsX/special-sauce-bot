@@ -38,7 +38,7 @@ Command.new(
     gardener.next_water = Time.utc + cd.minutes
     gardener.points += earnings
     gardener.save
-    next "HYDRATE #{plant.username}! go getyour feathers wet :>"
+    next "HYDRATE #{plant.username}! go get your feathers wet :>"
   else
     next "they didn't give us consent to water them :<"
   end

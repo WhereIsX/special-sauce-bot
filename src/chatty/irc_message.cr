@@ -1,7 +1,8 @@
 require "./chat_colors.cr"
+require "../models/ducky.cr"
 
 class IRCMessage
-  getter(type, time, username, message, raw_irc, words)
+  getter(type, time, username, message, raw_irc, words, ducky)
 
   @raw_irc : String
   @time : Time
@@ -10,6 +11,7 @@ class IRCMessage
   @username : String
   @message : String
   @words : Array(String)
+  @ducky : Model::Ducky | Nil
 
   enum MessageType
     TwitchMessage
@@ -18,12 +20,14 @@ class IRCMessage
   end
 
   def initialize(@raw_irc : String)
+    # default values
     @time = Time.local
     @type = parse_type()
     @username = ""
     @message = @raw_irc
     @words = Array(String).new
     @tags = Hash(String, String).new
+    @ducky = nil
 
     # then parse it further if is user message
     if @type == MessageType::UserMessage
@@ -32,12 +36,15 @@ class IRCMessage
       @username = parsed_ircm[:username]
       @message = parsed_ircm[:message]
       @words = @message.split(' ', remove_empty: true)
+      @ducky = Model::Ducky.find_by(username: @username)
+      # give ducky peas if its a ducky chatting
+      give_peas_for_chatting()
     end
   end
 
   # TODO: rename username => sender
   # parse_user_message?
-  def parse : NamedTuple(
+  private def parse : NamedTuple(
     username: String,
     message: String,
     tags: Hash(String, String),
@@ -67,13 +74,16 @@ class IRCMessage
     return {tags: tags, username: username, message: message}
   end
 
-  # private def parse_raw_channel_chatter(raw_irc : String) : NamedTuple(
-  #   tags: Hash(String, String),
-  #   username: String,
-  #   message: String)
-  # end
+  private def give_peas_for_chatting
+    ducky = @ducky
+    return if ducky.nil?
+    ducky.points += 1
+    if !ducky.save
+      puts "⚠️ you wat"
+    end
+  end
 
-  def parse_type : MessageType | Nil
+  private def parse_type : MessageType | Nil
     if ping?
       return MessageType::Ping
     elsif user_message?
@@ -89,21 +99,21 @@ class IRCMessage
     return @raw_irc.starts_with?("PING")
   end
 
+  private def user_message? : Bool
+    # return @raw_irc.starts_with?("@badge-info")
+    return @raw_irc.includes?("PRIVMSG")
+  end
+
+  private def twitch_message? : Bool
+    return @raw_irc.starts_with?(":tmi.twitch.tv")
+  end
+
   def is_ping? : Bool
     @type == MessageType::Ping
   end
 
   def is_user_msg? : Bool
     @type == MessageType::UserMessage
-  end
-
-  def user_message? : Bool
-    # return @raw_irc.starts_with?("@badge-info")
-    return @raw_irc.includes?("PRIVMSG")
-  end
-
-  def twitch_message? : Bool
-    return @raw_irc.starts_with?(":tmi.twitch.tv")
   end
 
   def print : String

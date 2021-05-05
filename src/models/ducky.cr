@@ -9,9 +9,11 @@ module Model
     column username : String
     column created_at : Time = Time.utc
 
-    column points : Int64 = 0
-    column at_me_consent : Bool = true
+    column purse : String = String.new # link to where ducky stores code
     column super_cow_power : Bool = false
+    column at_me_consent : Bool = true
+
+    column points : Int64 = 0
     column next_water : Time = Time.utc
 
     def self.valid_username?(username : String) : Bool

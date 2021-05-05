@@ -12,7 +12,7 @@ module Model
     column points : Int64 = 0
     column at_me_consent : Bool = true
     column super_cow_power : Bool = false
-    column next_water : Time
+    column next_water : Time = Time.utc
 
     def self.valid_username?(username : String) : Bool
       /^[A-Za-z0-9_]{4,25}$/.matches?(username)

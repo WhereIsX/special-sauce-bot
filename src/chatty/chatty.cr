@@ -26,6 +26,8 @@ class Chatty
     @client.puts("NICK #{bot_name}") # twitch doesn't seem to use this ???
     @client.puts("JOIN ##{channel_name}")
     @client.puts("CAP REQ :twitch.tv/tags") # gimme them tags booboo
+
+    Command.all["!reload"].call(IRCMessage.new(""))
     puts "I'm alive!"
     say("🌊 hi")
   end

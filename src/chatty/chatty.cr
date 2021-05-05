@@ -32,7 +32,25 @@ class Chatty
     say("🌊 hi")
   end
 
+  # def say(message : String)
+  #   if message.size > 500
+  #     puts "⚠️ MESSAGE TOO THICC"
+  #   end
+  #   @client.puts("PRIVMSG ##{@channel_name} :#{message} \r\n")
+  #   @client.flush
+  # end
+
   def say(message : String)
+    if message.size > 500
+      puts "⚠️ MESSAGE TOO THICC"
+      words = message.split(' ')
+      halfway = words.size // 2
+      first_part = words[0..halfway].join(' ')
+      second_part = words[halfway..].join(' ')
+      @client.puts("PRIVMSG ##{@channel_name} :#{first_part} \r\n")
+      @client.puts("PRIVMSG ##{@channel_name} :#{second_part} \r\n")
+      @client.flush
+    end
     @client.puts("PRIVMSG ##{@channel_name} :#{message} \r\n")
     @client.flush
   end

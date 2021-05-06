@@ -45,7 +45,7 @@ class Chatty
       puts "⚠️ MESSAGE TOO THICC"
       words = message.split(' ')
       halfway = words.size // 2
-      first_part = words[0..halfway].join(' ')
+      first_part = words[0...halfway].join(' ')
       second_part = words[halfway..].join(' ')
       @client.puts("PRIVMSG ##{@channel_name} :#{first_part} \r\n")
       @client.puts("PRIVMSG ##{@channel_name} :#{second_part} \r\n")

@@ -11,7 +11,7 @@ Command.new(
     next "you wat.  you need a record with us first: !start_record"
   end
 
-  if args.first.nil?
+  if args.empty?
     next "you wat. it's !my_pea_purse <link>"
   end
 

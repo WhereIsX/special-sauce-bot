@@ -1,7 +1,7 @@
 require "./../../config/db.cr"
 
 module Model
-  class Model::Ducky < Granite::Base
+  class Ducky < Granite::Base
     connection sqlite
     table ducky # Name of the table to use for the model, defaults to class name snake cased
 

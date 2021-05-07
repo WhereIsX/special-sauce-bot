@@ -15,9 +15,7 @@
 
 
 ### PRIORITY -1
-    
-    3.5 yak queue that duckies can shepard into the penn and 
-        - yana can shift the first yak off and shave it :> 
+     
     6. bot timeout
         - "wanna become famous?"
         - "how fast can you type?"

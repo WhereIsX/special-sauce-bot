@@ -1,5 +1,16 @@
-name: duck-feeder 
+name: special-sauce-bot
 version: 0.1.0
+
+authors:
+  - YANA <30638175+WhereIsX@users.noreply.github.com>
+
+targets:
+  typecrystal:
+    main: src/typecrystal.cr
+
+crystal: 0.36.1
+
+license: MIT
 
 dependencies:
   granite:

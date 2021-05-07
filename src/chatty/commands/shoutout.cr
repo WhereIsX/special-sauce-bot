@@ -7,6 +7,9 @@ Command.new(
   description: "shoutouts another streamer; !so <username>"
 ) do |ircm|
   _, arg = Command.parse_ircm(ircm)
+  if arg.empty?
+    next "you wat. who're you trying to shout at?"
+  end
   channel_name = arg.first
   next "nice try, 👅" if !Model::Ducky.valid_username?(channel_name)
   # search_result = `twitch api get search/channels?query=#{duckie_args}`

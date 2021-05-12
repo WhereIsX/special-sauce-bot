@@ -6,7 +6,8 @@ cd = 1
 
 Command.new(
   name: "!water",
-  description: "attempts to water a named duck (earns #{earnings} peas, cooldown #{cd} min); !water <ducky_name>"
+  description: "attempts to water a named duck (earns #{earnings} peas, cooldown #{cd} min); !water <ducky_name>",
+  species: "dynamic"
 ) do |ircm|
   # TBD: randomly picks a duck and tags them, asking them to drink
   # words: ("!water", "duckyname")

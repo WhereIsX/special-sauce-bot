@@ -3,7 +3,8 @@ require "../../models/ducky.cr"
 
 Command.new(
   name: "!my_peas",
-  description: "shows how many peas you have"
+  description: "shows how many peas you have",
+  species: "dynamic"
 ) do |ircm|
   ducky = Model::Ducky.find_by(username: ircm.username) # Model::Ducky | Nil
   if ducky

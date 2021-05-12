@@ -4,7 +4,8 @@ require "../../models/ducky.cr"
 
 Command.new(
   name: "!so",
-  description: "shoutouts another streamer; !so <username>"
+  description: "shoutouts another streamer; !so <username>",
+  species: "dynamic"
 ) do |ircm|
   _, arg = Command.parse_ircm(ircm)
   if arg.empty?

@@ -4,7 +4,9 @@ require "../../models/ducky.cr"
 
 Command.new(
   name: "!addcmd",
-  description: "adds a command to the database (costs 50 peas); !addcmd <command_name> <response>"
+  description: "adds a command to the database (costs 50 peas); \n
+  !addcmd <command_name> <response>",
+  species: "dynamic"
 ) do |ircm|
   ducky, arg = Command.parse_ircm(ircm)
 

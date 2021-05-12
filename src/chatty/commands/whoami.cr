@@ -3,7 +3,8 @@ require "../../models/ducky.cr"
 
 Command.new(
   name: "!whoami",
-  description: "in case you forgot, we can recite your info from our records (db) :>"
+  description: "in case you forgot, we can recite your info from our records (db) :>",
+  species: "dynamic"
 ) do |ircm|
   d = Model::Ducky.find_by(username: ircm.username) # Model::Ducky | Nil
   if d

@@ -2,7 +2,8 @@ require "./command.cr"
 
 Command.new(
   name: "!help",
-  description: "show help on specified command, or list commands if none specified; !help <command>"
+  description: "show help on specified command, or list commands if none specified; !help <command>",
+  species: "dynamic"
 ) do |ircm|
   _, args = Command.parse_ircm(ircm)
 

@@ -4,7 +4,9 @@ require "../../data/constants_collection.cr"
 
 Command.new(
   name: "!yak++",
-  description: "increment our yak counter and optionally specify the topic we shaved; !yak++ <optional: topic>"
+  description: "increment our yak counter and optionally specify the topic we shaved; \
+  !yak++ <optional: topic>",
+  species: "dynamic"
 ) do |ircm|
   yak = Model::Yak.new(created_at: Time.utc)
   if ircm.words[1..].join(' ')

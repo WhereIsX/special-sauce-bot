@@ -3,7 +3,8 @@ require "../../models/leak.cr"
 
 Command.new(
   name: "!leaked",
-  description: "show help on specified command, or list commands if none specified; !help <command>"
+  description: "show help on specified command, or list commands if none specified; !help <command>",
+  species: "dynamic"
 ) do |ircm|
   leak_record = Model::Leak.order(created_at: :desc).limit(1).select.first
 

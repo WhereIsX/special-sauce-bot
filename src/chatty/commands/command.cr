@@ -1,7 +1,7 @@
 # remove from Chatty:
 # @@static_commands
 # reload_static_commands
-# if enough duckies type:
+# if enough duckies species:
 # !mute <username>
 # within a time period,
 # bot will automute(?)
@@ -9,7 +9,8 @@
 require "../irc_message.cr"
 
 class Command
-  @@static = Array(String).new
+  @@static = Hash(String, Command).new
+  @@dynamic = Hash(String, Command).new
   @@all = Hash(String, Command).new
   @@link = String.new
   getter name, description
@@ -22,13 +23,17 @@ class Command
   def initialize(
     @name : String,
     @description : String,
+    species : String,
     &@proc : IRCMessage -> String
   )
-    if @name.empty?
-      raise ArgumentError.new("name is undefined")
+    case species
+    when "dynamic"
+      @@dynamic[@name] = self
+    when "static"
+      @@static[@name] = self
+    else
+      raise "you wat. accepted speciess are dynamic and static. you gave us #{type}"
     end
-
-    @@all[@name] = self
   end
 
   def call(ircm : IRCMessage) : String
@@ -53,12 +58,28 @@ class Command
     @@all
   end
 
+  def self.all=(new_all) : Hash(String, Command)
+    @@all = new_all
+  end
+
+  def self.dynamic : Hash(String, Command)
+    @@dynamic
+  end
+
   def self.static : Array(String)
     @@static
   end
 
   def self.static=(new_static : Array(String))
     @@static = new_static
+  end
+
+  def self.link : String
+    @@link
+  end
+
+  def self.link=(new_link)
+    @@link = new_link
   end
 
   def self.is_command?(ircm : IRCMessage) : Bool

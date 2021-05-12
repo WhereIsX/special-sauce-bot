@@ -3,7 +3,8 @@ require "../../models/ducky.cr"
 
 Command.new(
   name: "!start_record",
-  description: "starts a record to keep track of points and allows the bot to @ducky for water"
+  description: "starts a record to keep track of points and allows the bot to @ducky for water",
+  species: "dynamic"
 ) do |ircm|
   d = Model::Ducky.create(username: ircm.username)
   if d.errors.empty?

@@ -3,33 +3,21 @@ require "../../models/command.cr"
 
 Command.new(
   name: "!reload",
-  description: "reload static commands from db"
-) do |ircm|
-  # @@static = ["!so", "!lurk"]
-  # static commands in db changed => ["!so", "!welcome"]
-  # @@static still contains !lurk
-  # so if we reload without deleting first,
-  # we would have commands "!so"(new), "!welcome', *AND* "!lurk"
-
-  # delete the previously loaded commands
-  # from collection of commands (@@all)
-  Command.static.each do |cmd_name|
-    Command.all.delete(cmd_name)
-  end
-
-  # take all the commands from DB
-  # and make them into Commands to be used in chat
-  db_cmds = Model::Command.all
-  db_cmds.each do |cmd|
-    next if Command.all.has_key?(cmd.name)
+  description: "reload static commands from db",
+  species: "dynamic"
+) do |_|
+  Command.static = Hash(String, Command).new
+  # for each command from the database,
+  # make a static command
+  Model::Command.all.each do |cmd|
     Command.new(
       name: cmd.name,
-      description: "static command-- simply type #{cmd.name}"
+      description: "static command-- simply type #{cmd.name}",
+      species: "static"
     ) { |_| cmd.response }
   end
 
-  # set @@static to an [] of cmd.names
-  Command.static = db_cmds.map { |c| c.name }
+  Command.all = Command.static.merge(Command.dynamic)
 
   next "i think i did it?"
 end

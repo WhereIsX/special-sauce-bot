@@ -3,7 +3,8 @@ require "../../models/ducky.cr"
 
 Command.new(
   name: "!my_pea_purse",
-  description: "link to where you store your code; !my_pea_purse <link>"
+  description: "link to where you store your code; !my_pea_purse <link>",
+  species: "dynamic"
 ) do |ircm|
   ducky, args = Command.parse_ircm(ircm)
 

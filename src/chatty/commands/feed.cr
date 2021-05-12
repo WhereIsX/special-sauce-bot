@@ -3,7 +3,8 @@ require "../../models/ducky.cr"
 
 Command.new(
   name: "!feed",
-  description: "!feed <username> <integer = 10> give food to specific duck"
+  description: "!feed <username> <integer = 10> give food to specific duck",
+  species: "dynamic"
 ) do |ircm|
   # find caller record
   caller, args = Command.parse_ircm(ircm)

@@ -3,7 +3,8 @@ require "../../models/yak.cr"
 
 Command.new(
   name: "!yak_count",
-  description: "nexts how many yaks we shaved today"
+  description: "nexts how many yaks we shaved today",
+  species: "dynamic"
 ) do |ircm|
   yaks = Model::Yak.where(:created_at, :gt, 12.hours.ago).select.size
 

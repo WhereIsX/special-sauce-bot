@@ -3,7 +3,8 @@ require "../../models/ducky.cr"
 
 Command.new(
   name: "!consent",
-  description: "whether the bot can @ you in chat; !consent <revoke/give> "
+  description: "whether the bot can @ you in chat; !consent <revoke/give> ",
+  species: "dynamic"
 ) do |ircm|
   if ircm.words.size < 2
     next "you wat, it's !consent <revoke/give>"

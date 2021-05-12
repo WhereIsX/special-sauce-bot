@@ -3,7 +3,8 @@ require "../../models/leak.cr"
 
 Command.new(
   name: "!damn",
-  description: "auduckrized use only: we lost some keys to the public"
+  description: "auduckrized use only: we lost some keys to the public",
+  species: "dynamic"
 ) do |ircm|
   ducky, args = Command.parse_ircm(ircm)
   # we dont want just any regular user calling this method (prevent abuse!)

@@ -11,6 +11,7 @@ require "../irc_message.cr"
 class Command
   @@static = Array(String).new
   @@all = Hash(String, Command).new
+  @@link = String.new
   getter name, description
 
   enum Update
@@ -38,6 +39,14 @@ class Command
     ducky = Model::Ducky.find_by(username: ircm.username)
     args = ircm.words
     return ducky, args[1..]
+  end
+
+  def self.link
+    @@link
+  end
+
+  def self.link=(nl)
+    @@link = nl
   end
 
   def self.all : Hash(String, Command)

@@ -14,6 +14,7 @@ Command.new(
     consent (to @ you in chat): #{d.at_me_consent ? "Yay" : "Nay"}
     peas: #{d.points} Waaat"
   else
-    next "we couldn't find you; have you already !start_record ?"
+    next "<stares intensely> super cow? no...  sudo cow?  no... hmm. ya don't quack \
+    and ya don't look like a yak. you look like a nil to me :>"
   end
 end

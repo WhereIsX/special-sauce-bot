@@ -23,24 +23,10 @@
 
 
 ### PRIORITY 0 
-    - use granite!
-        - make model 
-            - manual test that we can use the model first :w
-            - validations 
-        - no more dblibrarian
-            - make dynamic commands use new models 
+    - servy uses channel to communicate with chatty 
+        - audogmagically shoutout raider :> 
+    - clean up .sql files
 
-        - clean up .sql files
-    - does it compile?
-    - ^ step 3: get certificate for website 
-        - use caddy 
-    - make own api calls
-        - currently using command literal ("shelling out") `twitch api get` 
-        - !so command depends on this
-    - make yak table 
-        - optional column: track yak topic
-            - !yak_track <topic>
-    - supercows should be a table :D 
 
 ### PRIORITY 1
     - rename chatty => ??? 

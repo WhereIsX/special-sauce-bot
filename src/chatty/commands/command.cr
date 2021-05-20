@@ -41,6 +41,12 @@ class Command
     return ducky, args[1..]
   end
 
+  # tries to use a twitch chat command 🤬
+  def self.naughty?(args : Array(String)) : Bool
+    return false if args.empty?
+    return args.first.starts_with?('/') || args.first.starts_with?('.')
+  end
+
   def self.link
     @@link
   end

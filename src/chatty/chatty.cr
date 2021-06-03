@@ -55,13 +55,17 @@ class Chatty
     @client.flush
   end
 
-
   def listen
     @listening = true
     spawn do
       while listening && (raw_irc = @client.gets)
-        now = Time.local.to_s
+        time = Time.local(Time::Location.load("America/New_York"))
         ircm = IRCMessage.new(raw_irc)
+        # log all chatter by writing to a file
+        log(time, ircm)
+        # print message to terminal
+        puts ircm.pretty_print
+
         if ircm.is_ping?
           answer_ping()
         elsif ircm.is_user_msg?
@@ -69,7 +73,6 @@ class Chatty
             respond(ircm)
           end
         end
-        puts ircm.print
       end
     end
 
@@ -78,6 +81,12 @@ class Chatty
       while listening && (following_event = @knit_between_fibers.receive)
         say("Waaat thanks for quackin' along #{following_event[:user]} Waaat")
       end
+    end
+  end
+
+  def log(time : Time, msg : IRCMessage)
+    File.open(filename: time.to_s("%Y-%m-%d"), mode: "a") do |f|
+      f.puts msg.log
     end
   end
 

@@ -21,7 +21,7 @@ class IRCMessage
 
   def initialize(@raw_irc : String)
     # default values
-    @time = Time.local
+    @time = Time.local(Time::Location.load("America/New_York"))
     @type = parse_type()
     @username = ""
     @message = @raw_irc
@@ -116,7 +116,11 @@ class IRCMessage
     @type == MessageType::UserMessage
   end
 
-  def print : String
+  def log : String
+    return "#{@time.to_s("%H:%M")} #{@username} : #{@message}"
+  end
+
+  def pretty_print : String
     # assemble a string ready for printing to terminal
     case @type
     when MessageType::TwitchMessage

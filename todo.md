@@ -15,11 +15,15 @@
 
 
 ### PRIORITY -1
-     
-    6. bot timeout
-        - "wanna become famous?"
-        - "how fast can you type?"
-        - the hoolians 
+    - add to "rules" before users engage in chat that 
+        their chatter will be logged by where_is_x
+    log all chat 
+    - 
+    bot timeout
+    - "wanna become famous?" 
+        - levenshetin distance 
+    - "how fast can you type?"
+    - the hoolians 
 
 
 ### PRIORITY 0 

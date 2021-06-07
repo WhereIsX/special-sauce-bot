@@ -11,7 +11,7 @@ Command.new(
     joined: #{d.created_at.to_s("%F")} Waaat \
     pea purse: #{d.purse.empty? ? "unknown" : d.purse} Waaat \
     sudo cow power: #{d.super_cow_power ? "Yay" : "Nay"} Waaat \
-    consent (to @ you in chat): #{d.at_me_consent ? "Yay" : "Nay"}
+    consent (to @ you in chat): #{d.at_me_consent ? "Yay" : "Nay"} \
     peas: #{d.points} Waaat"
   else
     next "<stares intensely> super cow? no...  sudo cow?  no... hmm. ya don't quack \

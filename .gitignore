@@ -7,3 +7,4 @@ licenses/
 *.db
 .history/
 2021*
+backups/

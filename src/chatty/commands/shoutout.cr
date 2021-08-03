@@ -21,8 +21,7 @@ Command.new(
     "Client-ID"     => ENV["TWITCH_APP_ID"],
     "Authorization" => "Bearer #{ENV["TWITCH_APP_ACCESS_TOKEN"]}",
   }
-  # async?
-  # spawn do
+
   result = HTTP::Client.get(
     url: URI.new(
       scheme: "https",
@@ -32,10 +31,10 @@ Command.new(
     ),
     headers: headers,
   )
-  # WHAT IF THEY NEVER GET BACK TO US??
+
   if !result.success?
-    p! result
-    raise "channel request failed with: #{result.status_code} "
+    p! ":( we failed"
+    next "go check out twitch.tv/#{channel_name} right meow! they're kinda magical"
   end
   data = JSON.parse(result.body).dig("data") # => JSON::Any
   user = data.as_a.find { |user| user["display_name"].to_s.downcase == channel_name.downcase }

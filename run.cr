@@ -17,6 +17,7 @@ parser = OptionParser.parse do |parser|
     description: "silent mode: bot does not respond, only `puts` to terminal"
   ) {
     silent_mode = true
+    puts "🪄 SILENCIO! 🪄"
   }
 end
 

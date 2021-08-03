@@ -116,7 +116,8 @@ class Chatty
 
   def answer_ping
     if @silent_mode
-      @client.puts "PONG :tmi.twitch.tv\n"
+      @client.puts "PONG :tmi.twitch.tv \r\n"
+      @client.flush
       # say "have you joined the flock yet? !start_record so we can start feeding you peas :>"
     else
       say PONG_FACTS[Random.rand(PONG_FACTS.size)] # "PONG" :>

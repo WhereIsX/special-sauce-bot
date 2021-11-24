@@ -85,7 +85,8 @@ class Chatty
   end
 
   def log(time : Time, msg : IRCMessage)
-    File.open(filename: time.to_s("%Y-%m-%d"), mode: "a") do |f|
+    path_and_name = time.to_s("logs/%Y-%m-%d")
+    File.open(filename: path_and_name, mode: "a") do |f|
       f.puts msg.log
     end
   end

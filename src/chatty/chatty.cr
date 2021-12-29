@@ -11,12 +11,11 @@ class Chatty
   def initialize(token : String,
                  bot_name : String,
                  channel_name : String,
-                 knit_between_fibers : Channel(Following_Info),
                  silent_mode : Bool = false,
                  use_new_irc_msg : Bool = false)
     @bot_name = bot_name
     @channel_name = channel_name
-    @knit_between_fibers = knit_between_fibers
+
     tcp_sock = TCPSocket.new("irc.chat.twitch.tv", 6697)
     @client = OpenSSL::SSL::Socket::Client.new(tcp_sock)
     @silent_mode = silent_mode
@@ -75,13 +74,6 @@ class Chatty
         end
       end
     end
-
-    # fiber stuff for follows
-    spawn do
-      while listening && (following_event = @knit_between_fibers.receive)
-        say("Waaat thanks for quackin' along #{following_event[:user]} Waaat")
-      end
-    end
   end
 
   def log(time : Time, msg : IRCMessage)
@@ -105,8 +97,8 @@ class Chatty
 
   def goodbye
     say("🌊 bye")
-    # part the channel
-    # quit the server
+    # part the irc channel
+    # quit the irc server
     @client.puts("QUIT")
     @listening = false
     # puts @client.gets

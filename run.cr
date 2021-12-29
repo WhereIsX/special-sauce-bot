@@ -3,7 +3,7 @@
 # a git commit's what i'm thinking of,
 # you wouldn't get this from any other lib you tried
 require "./src/chatty/chatty.cr"
-require "./src/servy/servy.cr"
+
 require "option_parser"
 
 # parse the flags given when program is run
@@ -23,27 +23,16 @@ end
 
 alias Following_Info = NamedTuple(broadcaster: String, user: String)
 
-channel = Channel(Following_Info).new(10)
-
 # IRC chat bot
 chatty = Chatty.new(
   token: ENV["TWITCH_CHAT_TOKEN"],
   bot_name: ENV["BOT_NAME"],
   channel_name: ENV["CHANNEL_NAME"],
-  knit_between_fibers: channel,
   silent_mode: silent_mode,
   use_new_irc_msg: false
 )
 
 chatty.listen
-
-# HTTP server
-#   (endpoint for twitch eventsub)
-servy = Servy.new(
-  knit_between_fibers: channel
-)
-
-servy.listen
 
 Signal::INT.trap { chatty.goodbye; exit }
 
@@ -52,7 +41,6 @@ while chatty.listening && (yana_says = gets)
   if yana_says == "quit"
     # Process.signal(signal: Signal::INT, pid: 0)
     chatty.goodbye
-    servy.goodbye
   else
     chatty.say(yana_says)
   end
